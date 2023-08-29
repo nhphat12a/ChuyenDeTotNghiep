@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Aristino.ViewModel.UserRoleVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+
+<h1>Role Management</h1>
+
+<p>
+    <button id="CreateButton" style="border:none">Create New</button>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Role Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach(var item in Model)
+                                        {
+                                            i++;
+                                    <tr>
+                                                <td>@i</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.RoleName)</td>
+                                            <td>
+                                                <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.RoleId">Edit</a>
+                                                <form asp-area="AristinoAdmin"  asp-action="Delete" asp-route-id="@item.RoleId"  method="post" class="ConfirmDelete">
+                                                     <button class="badge bg-danger DeleteButton" onclick="return confirmDelete(this)">Delete</button>
+                                                </form>
+                                            </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts
+{
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertAJAX.cshtml",new{CreateButtonID="#CreateButton",ActionName="Create",ControllerName="AdminUserRoles"})
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+}

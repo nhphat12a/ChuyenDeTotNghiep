@@ -1,0 +1,53 @@
+﻿@model Aristino.ViewModel.ColorVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Chỉnh Sửa</h1>
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" asp-action="Edit" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <input type="hidden" asp-for="ColorId"/>
+                                                    <div class="col-md-4">
+                                                        <label>Tên Màu</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="ColorName" placeholder="Color Name">
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="Tạo"
+                                                            class="btn btn-primary me-1 mb-1">Chỉnh Sửa</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Quay Lại</a>
+</div>
+
+@section Scripts{
+    @if (TempData["ErrorList"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+        @TempData.Remove("ErrorList")
+    }
+    @if(TempData["Error"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+}

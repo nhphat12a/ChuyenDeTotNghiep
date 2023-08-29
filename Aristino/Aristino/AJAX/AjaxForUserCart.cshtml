@@ -1,0 +1,81 @@
+﻿@model dynamic
+@{
+	var ProductIdInputClass = Model.ProductIdInputClass;
+	var ColorInputClass = Model.ColorInputClass;
+	var SizeInputClass = Model.SizeInputClass;
+	var QuantityInputClass = Model.QuantityInputClass;
+	string ActionName=Model.ActionName;
+	string ControllerName = Model.ControllerName;
+	var SubmitButton = Model.SubmitButton;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script>
+		$(document).ready(function(){
+		var createToken='@Html.AntiForgeryToken()';
+		var token=$(createToken).val();
+		var getProductId=parseInt($("@ProductIdInputClass").val());
+
+		$("@SubmitButton").on("click",function(e){
+			e.preventDefault;
+			var ColorName=$("@ColorInputClass").val();
+			var SizeName=$("@SizeInputClass").val();
+			var Quantity=parseInt($("@QuantityInputClass").val());
+			var formdata=new FormData();
+			formdata.append("getProductId",getProductId);
+			formdata.append("ColorName",ColorName);
+			formdata.append("SizeName",SizeName);
+			formdata.append("getQuantity",Quantity);
+			$.ajax({
+				type:"POST",
+				url: '@Url.Action(ActionName,ControllerName)',
+				headers:{
+					'RequestVerificationToken':token
+				},
+				data:formdata,
+				processData: false,
+				contentType: false,
+				statusCode:{
+					401: function(){
+						Swal.fire({
+						  title: '<strong>Error</strong>',
+						  icon: 'error',
+						  html:'<p>Đăng Nhập Để Sử Dụng Chức Năng Này</p>',
+						  showCloseButton: true,
+						  focusConfirm: false,
+						  confirmButtonText:'Ok'
+						});
+					}
+				},
+				success: function(response){
+						if(response.isSuccess==="Failed"){
+						var Error=response.message;
+						Swal.fire({
+							icon: "error",
+							title: Error,
+							confirmButtonText:'Got it'
+						}).then((result)=>{
+							if(result.isConfirmed){
+								location.reload();
+							}
+						})
+					}
+					else{
+						var Success=response.message;
+						Swal.fire({
+							icon: "success",
+							title: Success,
+							confirmButtonText:'Got it'
+						}).then((result)=>{
+							if(result.isConfirmed){
+								location.reload();
+							}
+						})
+					}
+
+				}
+			});
+		})
+		})
+	</script>

@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Aristino.ViewModel.BlogVM>
+
+@{
+    ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@foreach (var item in Model)
+{
+	DateTime date = DateTime.Parse(item.PostDate);
+	string MonthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month);
+	<!-- HEADING-BANNER START -->
+	<input type="hidden" value="@item.BlogId" id="BlogId"/>
+			<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/uploads/AdminBlogs/"+item.BlogTitle+"/"+item.Thumbnail)');width:100%;background-repeat:no-repeat;background-size:cover">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2 style="line-height:50px">@Html.DisplayFor(modelitem=>item.BlogTitle)</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+										<li>Blogs</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<div class="blog-area blog-2 blog-details-area  pt-80 pb-80">
+					<div class="container">	
+						<div class="blog">
+							<div class="row">
+								<!-- Single-blog start -->
+								<div class="col-lg-12">
+									<div class="single-blog mb-30">
+										<div class="blog-photo">
+											<a><img src="@Url.Content("~/uploads/AdminBlogs/"+item.BlogTitle+"/"+item.Thumbnail)" alt="" /></a>
+											<div class="like-share fix">
+												<a><i class="zmdi zmdi-account"></i><span>@item.Customer.FirstName @item.Customer.LastName</span></a>
+												<a id="LikeButton"><i class="zmdi zmdi-favorite"></i><span>@item.BlogLike</span></a>
+												<a><i class="zmdi zmdi-comments"></i><span>@ViewBag.CommentCount Comments</span></a>
+												<a class="hidden-xs"><i class="zmdi zmdi-eye"></i><span>@item.BlogViews</span></a>
+											</div>
+											<div class="post-date post-date-2">
+												<span class="text-dark-red">@date.Day</span>
+												<span class="text-dark-red text-uppercase">@MonthName</span>
+											</div>
+										</div>
+										<div class="blog-info blog-details-info">
+											<h4 class="post-title post-title-2"><a>@item.BlogTitle</a></h4>
+											<p>@Html.Raw(item.BlogContent)</p>
+											<div class="author-comments clearfix mt-40">
+												<div class="author-photo floatleft">
+													<img src="@Url.Content("~/uploads/Customers/"+item.Customer.Email+"/"+item.Customer.Avatar)" alt="" />
+												</div>
+												<div class="author-brief">
+													<h3 class="font-16px"><strong>@item.Customer.FirstName @item.Customer.LastName</strong></h3>
+													<p>Ngày Đăng: @item.PostDate</p>
+												</div>
+											</div>
+											<div class="pro-reviews mt-60">
+												<div class="customer-review mb-60">
+													<h3 class="tab-title title-border mb-30">Bình Luận Của Bạn</h3>
+													<ul class="product-comments clearfix">
+														@if(ViewBag.BlogComment !=null)
+														{
+															@foreach(BlogComment comment in ViewBag.BlogComment)
+															{
+														<li class="mb-30">
+															<div class="pro-reviewer">
+																<img src="@Url.Content("~/uploads/Customers/"+comment.Customer.Email+"/"+comment.Customer.Avatar)" alt="" />
+															</div>
+															<div class="pro-reviewer-comment">
+																<div class="fix">
+																	<div class="floatleft mbl-center">
+																		<h5 class="text-uppercase mb-0"><strong>@comment.Customer.FirstName @comment.Customer.LastName</strong></h5>
+																		<p class="reply-date">@comment.CommentDate</p>
+																	</div>
+																	<div class="comment-reply floatright">
+																		<a class="DeleteButton"><i class="zmdi zmdi-close"></i></a>
+																		<input type="hidden" value="@comment.BlogCommentId" class="CommentId">
+																	</div>
+																</div>
+																<p class="mb-0">@comment.CommentContent</p>
+															</div>
+														</li>
+														}
+														}
+													</ul>
+												</div>
+												<div class="leave-review">
+													<h3 class="tab-title title-border mb-30">Viết Bình Luận Của Bạn</h3>
+													<div class="reply-box">
+															<div class="row">
+																<div class="col-md-6 col-sm-6 col-xs-12">
+																	<input type="text" placeholder="Tiêu Đề..." name="name" id="Title" />
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<textarea class="custom-textarea" name="message" placeholder="Bình Luận Của Bạn..." ></textarea>
+																	<button data-text="submit review" class="button-one submit-button mt-20">submit review</button>
+																</div>
+															</div>
+													</div>
+												</div>
+											</div>										
+										</div>
+									</div>
+								</div>
+								<!-- Single-blog end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+@section Scripts{
+	@await Html.PartialAsync("~/AJAX/UserComment.cshtml",new{
+		TitleInputId="#Title",CommentInput=".custom-textarea",
+		SubmitButton=".submit-button",ContentId="#BlogId",ActionName="BlogComment",ControllerName="AdminComments",FormAppend="BlogId"
+	})
+	@await Html.PartialAsync("~/AJAX/DeleteButton.cshtml",new{
+		DeleteButton=".DeleteButton",ItemId=".CommentId",ActionName="DeleteBlogComment",ControllerName="AdminComments",WarningMessage="Bạn Có Chắc Muốn Xóa Comment Không ?",
+		ParentDiv=".comment-reply",FormDataAppend="BlogCommentId"
+	})
+	@await Html.PartialAsync("~/AJAX/LikeButton.cshtml",new{
+		LikeButton="#LikeButton",ActionName="LikeBlog",ControllerName="AdminBlogs",ItemId="#BlogId",FormAppend="blogId"
+	})
+}

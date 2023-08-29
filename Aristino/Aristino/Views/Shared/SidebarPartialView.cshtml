@@ -1,0 +1,207 @@
+﻿@using Newtonsoft.Json;
+@inject IHttpContextAccessor HttpContextAccessors
+@{
+	ViewBag.HasCookie = TempData["HasCookie"];
+	ViewBag.NumberOfCart = TempData["NumberOfCart"];
+	TempData.Keep("HasCookie");
+	TempData.Keep("NumberOfCart");
+	var session = HttpContextAccessors.HttpContext.Session;
+	var getSerializeModel = session.GetString("UserCart");
+	var getSerializeCategory = session.GetString("Category");
+	var getCollection = session.GetString("FashionCollection");
+	var model = new List<Cart>();
+	var category = new List<Category>();
+	var fashion = new List<FashionCollection>();
+	if (getSerializeCategory != null && getSerializeModel != null && getCollection!=null)
+	{
+		model = JsonConvert.DeserializeObject<List<Cart>>(getSerializeModel);
+		category = JsonConvert.DeserializeObject<List<Category>>(getSerializeCategory);
+		fashion = JsonConvert.DeserializeObject<List<FashionCollection>>(getCollection);
+	}
+}
+<!-- HEADER-AREA START -->
+			<header id="sticky-menu" class="header">
+				<div class="header-area">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-sm-4 col-sm-offset-4 col-xs-7">
+								<div class="logo text-center">
+									<a asp-action="Index" asp-controller="Home"><img src="@Url.Content("~/img/AristinoLogo/logo Aristino Final 2023 (2).png")" alt="" /></a>
+								</div>
+							</div>
+							<div class="col-sm-4 col-xs-5 test">
+								<div class="mini-cart text-right">
+									<ul>
+										<li>
+											@if(ViewBag.HasCookie==true)
+											{
+											<a class="cart-icon" asp-controller="UserCartArea" asp-action="Cart">
+												<i class="zmdi zmdi-shopping-cart"></i>
+												<span>@ViewBag.NumberOfCart</span>
+											</a>
+											<div class="mini-cart-brief text-left">
+												<div class="cart-items">
+													<p class="mb-0">Bạn Có <span>@ViewBag.NumberOfCart items</span> trong giỏ hàng</p>
+												</div>
+												<div class="all-cart-product clearfix">
+													@foreach(var cart in model){
+													<div class="single-cart clearfix">
+														<div class="cart-photo">
+															<a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@cart.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+cart.Product.ProductName+"/"+cart.Product.ProductImage)" alt="" style="width:90px!important;height:90px!important" /></a>
+														</div>
+														<div class="cart-info">
+															<h5 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:150px"><a href="#">@cart.Product.ProductName</a></h5>
+															@if(cart.Product.Discount!=0)
+															{
+															var newPrice = cart.Product.Price * (Convert.ToDecimal(cart.Product.Discount) / 100);
+															<p class="mb-0">Price :<span name="price">@Convert.ToInt32(newPrice)</span></p>
+															}
+															else
+															{
+																<p class="mb-0">Price :<span name="price">@cart.Product.Price</span></p>
+															}
+															<p class="mb-0">Qty : <span name="quantity">@cart.Quantity </span></p>
+															<span class="cart-delete">
+																	<a href="#" class="submit-delete"><i class="zmdi zmdi-close"></i></a>
+															</span>
+														</div>
+														<input type="hidden" class="getCartID" value="@cart.CartId"/>
+													</div>
+													}
+												</div>
+												<div class="cart-totals">
+													<h5 class="mb-0">Tổng Tiền: <input value="" id="TotalPrice" disabled style="border:none;background-color:white;text-align:right"/>VND</h5>
+												</div>
+												<div class="cart-bottom  clearfix">
+													<a asp-controller="UserCartArea" asp-action="Cart" asp-route-id="@User.Claims.FirstOrDefault(x=>x.Type=="CustomerId").Value" class="button-one floatleft text-uppercase" data-text="View cart">Xem Giỏ Hàng</a>
+												</div>
+											</div>
+											}
+											else
+											{
+											<a class="cart-icon" asp-controller="UserCartArea" asp-action="Cart">
+												<i class="zmdi zmdi-shopping-cart"></i>
+											</a>
+											}
+										</li>
+										<li>
+											@if(ViewBag.HasCookie==true)
+											{
+											<a class="login" asp-controller="Customers" asp-action="UserDetail">
+												<i class="zmdi zmdi-account" style="font-size:25px"></i>
+											</a>
+											}
+											else{
+												<a class="login" asp-controller="Login" asp-action="Index">
+													<i class="zmdi zmdi-account" style="font-size:25px"></i>
+												</a>
+											}
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- MAIN-MENU START -->
+				<div class="menu-toggle hamburger hamburger--emphatic hidden-xs">
+					<div class="hamburger-box">
+						<div class="hamburger-inner"></div>
+					</div>
+				</div>
+				<div class="main-menu  hidden-xs">
+					<nav>
+						<ul>
+							<li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+							<li><a class="search-open" href="#" title="Search">Tìm Kiếm</a></li>
+							<li><a asp-controller="BlogsPage" asp-action="AllBlog">Blog</a></li>
+							<li><a href="#">Danh Mục</a>
+								<div class="sub-menu menu-scroll">
+									<ul>
+										<li class="menu-title">Danh Mục</li>
+										@foreach(var categoryItem in category)
+										{
+											<li><a asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@categoryItem.CategoryId">@Html.DisplayFor(modelitem=>categoryItem.CategoryName)</a></li>
+										}
+									</ul>
+								</div>
+							</li>
+							<li>
+								<a href="#">Bộ Sưu Tập</a>
+								<div class="sub-menu menu-scroll">
+									<ul>
+										<li class="menu-title">Bộ Sưu Tập</li>
+										@foreach(var collection in fashion)
+										{
+											<li><a asp-controller="FashionCollections" asp-action="Index" asp-route-CollectionID="@collection.CollectionId">@Html.DisplayFor(modelitem=>collection.CollectionName)</a></li>
+										}
+									</ul>
+								</div>
+							</li>
+@*							<li><a asp-controller="Home" asp-action="About">Về Chúng Tôi</a></li>
+							<li><a asp-controller="Home" asp-action="Contact">Liên Hệ</a></li>*@
+							@if(ViewBag.HasCookie==true)
+							{
+							<li><a asp-area="AristinoAdmin" asp-controller="AccountLogin" asp-action="Logout">Đăng Xuất</a></li>
+							}
+						</ul>
+					</nav>
+				</div>
+				<!-- MAIN-MENU END -->
+			</header>
+			<!-- HEADER-AREA END -->
+			<!-- Mobile-menu start -->
+			<div class="mobile-menu-area">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-12 hidden-lg hidden-md hidden-sm">
+							<div class="mobile-menu">
+								<nav id="dropdown">
+									<ul>
+										<li><a href="index.html">home</a></li>
+										<li><a href="shop.html">products</a></li>
+										<li><a href="shop.html">accesories</a></li>
+										<li><a href="shop.html">lookbook</a></li>
+										<li><a href="blog.html">blog</a></li>
+										<li><a href="#">pages</a>
+											<ul>
+												<li><a href="shop.html">Shop</a></li>
+												<li><a href="single-product.html">Single Product</a></li>
+												<li><a href="cart.html">Shopping Cart</a></li>
+												<li><a href="wishlist.html">Wishlist</a></li>
+												<li><a href="checkout.html">Checkout</a></li>
+												<li><a href="order.html">Order</a></li>
+												<li><a href="login.html">login / Registration</a></li>
+												<li><a href="my-account.html">My Account</a></li>
+												<li><a href="404.html">404</a></li>
+												<li><a href="blog.html">Blog</a></li>
+												<li><a href="single-blog.html">Single Blog</a></li>
+												<li><a href="about.html">About Us</a></li>
+												<li><a href="contact.html">Contact</a></li>
+											</ul>
+										</li>
+										<li><a href="about.html">about us</a></li>
+										<li><a href="contact.html">contact</a></li>
+									</ul>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Mobile-menu end -->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script>
+	var TotalCartPrice=0;
+	var getCart=document.getElementsByClassName("single-cart");
+	var getProductPrice=document.getElementsByName("price");
+	var getQuantity=document.getElementsByName("quantity");
+	var getTotolPriceView=document.getElementById("TotalPrice");
+	for(let i=0;i<getCart.length;i++)
+	{
+		var Total=parseFloat(getProductPrice[i].textContent) * parseFloat(getQuantity[i].textContent)
+		TotalCartPrice=TotalCartPrice + Total;
+	}
+	getTotolPriceView.value=TotalCartPrice;
+</script>
+@await Html.PartialAsync("AJAXSubmit.cshtml",new{ActionName="RemoveItemFromCart",ControllerName="UserCartArea",ButtonClass="submit-delete",InputValueClass="getCartID",DivClassToRefresh=".cart-icon"})

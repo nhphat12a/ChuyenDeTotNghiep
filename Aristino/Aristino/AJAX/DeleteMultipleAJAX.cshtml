@@ -1,0 +1,79 @@
+﻿@model dynamic
+@{
+    var CheckBoxClassName = Model.CheckBoxClassName;
+    var DeleteButton = Model.DeleteButton;
+    string ControllerName = Model.ControllerName;
+    string ActionName = Model.ActionName;
+    var getID = Model.getID;
+    var VariableName = Model.VariableName;
+}
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script>
+    $("@DeleteButton").on("click",function(){
+        var createToken='@Html.AntiForgeryToken()';
+        var token=$(createToken).val();
+        var getID=$("@getID").val();
+            const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+              },
+              buttonsStyling: false
+         })
+                swalWithBootstrapButtons.fire({
+                  title: 'Bạn Chắc Chắn Muốn Xóa Mục Này ?',
+                  text: "Sẽ Không Thể Hồi Phục Nếu Đã Xóa!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Có, Xóa Đi',
+                  cancelButtonText: 'Không, Đừng Xóa!',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                        var formdata=new FormData();
+                        $("@CheckBoxClassName:checked").each(function(){
+                            formdata.append("ProductIDList",parseInt($(this).val()));
+                        })
+                        if(getID!=="")
+                        {
+                            formdata.append("@VariableName",parseInt(getID));
+                        }
+                        $.ajax({
+                                 url: '@Url.Action(ActionName,ControllerName)',
+                                 type:"POST",
+                                 headers:{
+                                        'RequestVerificationToken':token
+                                    },
+                                 data:formdata,
+                                 processData: false,
+                                 contentType: false,
+                                  success: function(response){
+                                      if(response.isSuccess==="Failed"){
+                                          window.location.href=response.redirectToUrl;
+                                      }
+                                   swalWithBootstrapButtons.fire(
+                                          'Đã Xóa!',
+                                          'Đã Xóa Thành Công Mục Này',
+                                          'success'
+                                        ).then((success)=>{
+                                            if(success.isConfirmed){
+                                              location.reload();
+                                            }
+                                        });
+                                }
+                       });
+                  } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    swalWithBootstrapButtons.fire(
+                      'Đã Hủy',
+                      'Yêu Cầu Xóa Đã Hủy',
+                      'error'
+                    )
+                  }
+                })
+    })
+</script>

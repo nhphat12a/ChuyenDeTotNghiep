@@ -1,0 +1,64 @@
+﻿@model Aristino.Models.AristinoPolicy
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ErrorList = TempData["ErrorList"];
+}
+
+<h1>Thêm Mới</h1>
+
+<h4>Chính Sách</h4>
+<hr />
+
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Create" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Tên Chính Sách</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="PolicyTitle" placeholder="Tên Chính Sách">
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Nội Dung</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <textarea class="form-control" asp-for="PolicyContent"></textarea>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Thêm</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Quay Lại</a>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+@section Scripts{
+    @await Html.PartialAsync("_AdminSummernoteRichTextEditor.cshtml",new{height=200,selector="#PolicyContent"})
+    @if(TempData["ErrorList"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+        @TempData.Remove("ErrorList")
+    }
+    @if(TempData["Error"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error");
+    }
+}

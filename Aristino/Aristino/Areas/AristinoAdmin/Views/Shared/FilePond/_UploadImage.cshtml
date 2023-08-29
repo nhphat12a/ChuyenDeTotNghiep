@@ -1,0 +1,86 @@
+﻿@model dynamic
+@{
+    var InputClass = Model.InputClass;
+    var FormId = Model.FormId;
+    string ActionName = Model.ActionName;
+    string ControllerName = Model.ControllerName;
+    ViewBag.ImageGallery = Model.ImageGallery;
+    ViewBag.ProductName = Model.ProductName;
+    var AllowMultiple = Model.AllowMultiple;
+}
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+   <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+     <script src="https://unpkg.com/filepond@latest/dist/filepond.min.js"></script>
+<!--FilePond Upload Script-->
+<script>
+    // register desired plugins...
+    FilePond.registerPlugin(
+        // preview the image file type...
+        FilePondPluginImagePreview,
+        FilePondPluginImageCrop
+    );
+    // Filepond: Image Preview
+       $(document).ready(function(e){ 
+          createPond = FilePond.create(document.querySelector('@InputClass'), { 
+            allowImagePreview: true,
+            allowMultiple: @AllowMultiple,
+            allowImageFilter: false,
+            allowImageExifOrientation: false,
+            allowImageCrop: true,
+            acceptedFileTypes: ['image/png','image/jpg','image/jpeg'],
+            fileValidateTypeDetectType: (source, type) => new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+                resolve(type);
+            })
+        });
+        $(document).ready(function(e){
+        const getImageGalleryJSON=@Html.Raw(Json.Serialize(ViewBag.ImageGallery));
+        const ProductName=@Html.Raw(Json.Serialize(ViewBag.ProductName));
+        for(let i=0;i<getImageGalleryJSON.length;i++){
+            const ImgURL="@Url.Content("~/uploads/"+ControllerName)/"+ProductName+"/"+getImageGalleryJSON[i];
+            console.log(ImgURL);
+            fetch(ImgURL)
+            .then(res=>res.blob())
+            .then(blob=>{
+                const Imagefile=new File([blob],getImageGalleryJSON[i],{type:blob.type});
+                createPond.addFile(Imagefile).then((file)=>{
+                    console.log("file added");
+                    console.log(createPond.files);
+                })
+                .catch((error)=>{
+                    console.log("add failed");
+                });
+            });
+            }
+        });
+        $("@FormId").submit(function (e) {
+          e.preventDefault();
+          var formdata = new FormData(this);
+          // append FilePond files into the form data
+          pondFiles = createPond.getFiles();        
+          console.log(pondFiles);
+          for (var i = 0; i < pondFiles.length; i++) {
+              // append the blob file
+              formdata.append('UploadImage', pondFiles[i].file);
+          }
+
+          $.ajax({
+            url: '@Url.Action(ActionName,ControllerName)',
+            data: formdata,
+
+            processData: false,
+            contentType: false,
+            method:"post",
+            success: function(response){
+                window.location.href=response.redirectToUrl;
+            }
+          });
+
+        })
+      });
+</script>

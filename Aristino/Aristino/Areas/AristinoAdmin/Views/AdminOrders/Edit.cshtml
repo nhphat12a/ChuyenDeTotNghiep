@@ -1,0 +1,102 @@
+﻿@model Aristino.ViewModel.OrderVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ErrorList = TempData["ErrorList"];
+}
+<h1>Cập Nhật Trạng Thái Đơn Hàng</h1>
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="ChangeTransacStatus" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <input type="hidden" asp-for="OrderId" />
+                                                    <input type="hidden" asp-for="TotalPrice" />
+                                                    <div class="col-md-4">
+                                                        <labe>Mã Hóa Đơn</labe>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="OrderNumber" placeholder="Order Number" readonly>
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Tên Khách Hàng</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="CustomerId" asp-items="ViewBag.CustomerId">
+                                                            <option disabled></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Hình Thức Thanh Toán</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="PaymentId" asp-items="ViewBag.PaymentId">
+                                                            <option disabled></option>
+                                                        </select>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>ShipDate</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" asp-for="ShipDate" readonly/>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Trạng Thái Đơn Hàng</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                       <select class="form-control" asp-for="TransacId" asp-items="ViewBag.TransacId">
+                                                           <option value="" selected></option>
+                                                       </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Payment Date</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                        <input type="text" class="form-control" placeholder="Source Link" asp-for="PaymentDate" readonly/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Ngày Đặt Hàng</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                        <input type="text" class="form-control" placeholder="Order Date" asp-for="OrderDate" readonly/>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Cập Nhật</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Quay Lại</a>
+</div>
+@section Scripts{
+    @if (TempData["Success"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @if(TempData["Error"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+    @if(TempData["ErrorList"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+        @TempData.Remove("ErrorList")
+    }
+}

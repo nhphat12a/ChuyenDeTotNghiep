@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Aristino.ViewModel.FashionCollectionVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    var i = 0;
+}
+
+<h1>Quản Lý Collection</h1>
+
+<p>
+    <a asp-action="Create">Tạo Collection</a>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <button id="DeleteAll" class="badge bg-danger" disabled>Xóa Những Mục Đã Chọn</button>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Tên</th>
+                                        <th>Hình</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Hành Động</th>
+                                         <th>Chọn Tất Cả <input type="checkbox" id="CheckAll" /></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                                         <tr>
+                                                    <td>@i</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.CollectionName)</td>
+                                                    <td><img src="@Url.Content("~/uploads/AdminFashionCollections/"+item.CollectionName+"/"+item.CollectionThumbnail)" style="width:75px;height:75px" /></td>
+                                                    <td>@if(!Convert.ToBoolean(item.CollectionDisable))
+                                                        {
+                                                            <span class="badge bg-success">Đang Bật</span>
+                                                        }
+                                                        else{
+                                                            <span class="badge bg-danger">Đã Tắt</span>
+                                                        }
+                                                    </td>
+                                                <td>
+                                                    <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.CollectionId">Sửa</a>
+                                                    <form asp-area="AristinoAdmin" asp-controller="AdminFashionCollections" asp-action="Delete" asp-route-id="@item.CollectionId"  method="post" class="ConfirmDelete">
+                                                         <button class="badge bg-danger DeleteButton">Xóa</button>
+                                                    </form>
+                                                    <a asp-action="Details" class="badge bg-success" asp-route-id="@item.CollectionId">Xem</a>
+                                                </td>
+                                                <td><input type="checkbox" value="@item.CollectionId" class="cb" /></td>
+                                        </tr>
+                        }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @await Html.PartialAsync("~/JavascriptPartialView/DisableEnableButton.cshtml",new{
+        DeleteAllButton="DeleteAll",CheckBoxClassName="cb"
+    })
+    @await Html.PartialAsync("~/JavascriptPartialView/CheckAllCheckBox.cshtml",new{
+        CheckAllButton="CheckAll",GetAllCheckBox="cb",DeleteButton="DeleteAll"
+    })
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+    @await Html.PartialAsync("~/AJAX/DeleteMultipleAJAX.cshtml",new{
+        CheckBoxClassName=".cb",DeleteButton="#DeleteAll",ControllerName="AdminFashionCollections",ActionName="DeleteMultiple",
+        getID="",VariableName=""
+    })
+}

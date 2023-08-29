@@ -1,0 +1,16 @@
+﻿@model dynamic
+@{
+    int height = Model.height ?? 200;
+    string selector = Model.selector;
+}
+<link rel="stylesheet" href="~/assets/vendors/summernote/summernote-lite.css"/>
+<script src="~/assets/vendors/summernote/summernote-lite.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("@selector").summernote({
+            height:@height,
+            tabsize:2,
+
+        });
+    });
+</script>

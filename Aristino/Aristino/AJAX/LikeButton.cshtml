@@ -1,0 +1,56 @@
+﻿@model dynamic
+@{
+    var LikeButton=Model.LikeButton;
+    string ActionName = Model.ActionName;
+    string ControllerName = Model.ControllerName;
+    var ItemId = Model.ItemId;
+    var FormAppend = Model.FormAppend;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function(){
+        var getTokenInput='@Html.AntiForgeryToken()';
+        var token=$(getTokenInput).val();
+        $("@LikeButton").on("click",function(){
+            var getItemId=$("@ItemId").val();
+            var formdata=new FormData();
+            formdata.append("@FormAppend",getItemId);
+            $.ajax({
+                type: "POST",
+                url: "/AristinoAdmin/@ControllerName/@ActionName",
+                headers:{
+                    'RequestVerificationToken':token
+                },
+                data:formdata,
+                processData: false,
+                contentType: false,
+                statusCode:{
+                    401:function(){
+                    Swal.fire({
+                          title: '<strong>Error</strong>',
+                          icon: 'error',
+                          html:'<p>Đăng Nhập Để Có Thể Like</p>',
+                          showCloseButton: true,
+                          focusConfirm: false,
+                          confirmButtonText:'Ok'
+                    })
+                    }
+                },
+                success: function(response){
+                        var Success=response.message;
+                        Swal.fire({
+                            icon: "success",
+                            title: Success,
+                            confirmButtonText:'Got it'
+                        }).then((result)=>{
+                            if(result.isConfirmed){
+                                location.reload();
+                            }
+                        })
+                }
+            })
+        })
+    })
+</script>

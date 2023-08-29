@@ -1,0 +1,25 @@
+﻿@model dynamic
+@{
+    var CheckAllButton = Model.CheckAllButton;
+    var GetAllCheckBox = Model.GetAllCheckBox;
+    var DeleteButton = Model.DeleteButton;
+}
+<script>
+    var CheckAllButton=document.getElementById("@CheckAllButton")
+    var getAllCheckBox=document.getElementsByClassName("@GetAllCheckBox")
+    var getButton=document.getElementById("@DeleteButton")
+    CheckAllButton.addEventListener("change",function(){
+        if(CheckAllButton.checked){
+            for(let i=0;i<getAllCheckBox.length;i++){
+                getAllCheckBox[i].checked=true;
+                getButton.disabled=false;
+            }
+        }
+        else{
+             for(let i=0;i<getAllCheckBox.length;i++){
+                getAllCheckBox[i].checked=false;
+                getButton.disabled=true
+            }
+        }
+    })
+</script>

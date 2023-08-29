@@ -1,0 +1,85 @@
+﻿@model dynamic
+@{
+    var TitleInputId = Model.TitleInputId;
+    var CommentInput = Model.CommentInput;
+    var SubmitButton = Model.SubmitButton;
+    var ContentId = Model.ContentId;
+    string ActionName = Model.ActionName;
+    string ControllerName = Model.ControllerName;
+    string FormAppend = Model.FormAppend;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function(e){
+        var getToken='@Html.AntiForgeryToken()';
+        var token=$(getToken).val();
+        var getProductId=parseInt($("@ContentId").val());
+        var parentStarRating=$(".star-rating").width();
+        $("@SubmitButton").on("click",function(){
+            var getRating=$(".star-value").width();
+            var getTitle=$("@TitleInputId").val();
+            var getComment=$("@CommentInput").val();
+            var formdata=new FormData();
+            formdata.append("Title",getTitle);
+            formdata.append("CommentContent",getComment);
+            formdata.append("@FormAppend",getProductId);
+            formdata.append("StarRating",getRating*100/parentStarRating)
+            $.ajax({
+                method:"POST",
+                url: '/AristinoAdmin/@ControllerName/@ActionName',
+                headers:{
+                    'RequestVerificationToken':token
+                },
+                data:formdata,
+                processData: false,
+                contentType: false,
+                statusCode:{
+                    401: function(){
+                        Swal.fire({
+                          title: '<strong>Error</strong>',
+                          icon: 'error',
+                          html:'<p>Đăng Nhập Để Có Thể Bình Luận</p>',
+                          showCloseButton: true,
+                          focusConfirm: false,
+                          confirmButtonText:'Ok'
+                        });
+                    }
+                },
+                success: function(response){
+                    if(response.isSuccess==="Failed")
+                    {
+                        var ErroMsg=response.message;
+                        Swal.fire({
+                          title: '<strong>Error</strong>',
+                          icon: 'error',
+                          html:ErroMsg,
+                          showCloseButton: true,
+                          focusConfirm: false,
+                          confirmButtonText:'Ok'
+                    }).then((result)=>{
+                        if(result.isConfirmed){
+                            location.reload();
+                        }
+                    })
+                    }
+                    else{
+                        var Success=response.message;
+                            Swal.fire({
+                              title: '<strong>Success</strong>',
+                              icon: 'success',
+                              html:Success,
+                              showCloseButton: true,
+                              focusConfirm: false,
+                              confirmButtonText:'Ok'
+                        }).then((result)=>{
+                                if(result.isConfirmed)
+                                    location.reload();
+                          })
+                    }
+                }
+            })
+        })
+    })
+</script>

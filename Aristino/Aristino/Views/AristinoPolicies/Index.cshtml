@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Aristino.ViewModel.AristinoPolicyVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@foreach (var item in Model)
+{
+		<!-- HEADING-BANNER START -->
+				<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/PolicyImage/AristinoPolicy.jpg")');width:100%;background-repeat:no-repeat;background-size:cover">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="heading-banner">
+									<div class="heading-banner-title">
+										<h2 style="line-height:50px">@Html.DisplayFor(modelitem=>item.PolicyTitle)</h2>
+									</div>
+									<div class="breadcumbs pb-15">
+										<ul>
+											<li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+											<li>@Html.DisplayFor(modelitem=>item.PolicyTitle)</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- HEADING-BANNER END -->
+				<div class="blog-area blog-2 blog-details-area  pt-80 pb-80">
+						<div class="container">	
+							<div class="blog">
+								<div class="row">
+									<!-- Single-blog start -->
+									<div class="col-lg-12">
+										<div class="single-blog mb-30">
+											<div class="blog-info blog-details-info">
+												<h4 class="post-title post-title-2"><a>@Html.DisplayFor(modelitem=>item.PolicyTitle)</a></h4>
+												<p>@Html.Raw(item.PolicyContent)</p>								
+											</div>
+										</div>
+									</div>
+									<!-- Single-blog end -->
+								</div>
+							</div>
+						</div>
+					</div>
+}

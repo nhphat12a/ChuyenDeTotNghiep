@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Aristino.ViewModel.AristinoPolicyVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    var i = 0;
+}
+
+<h1>Quản Lý Chính Sách Của Aristino</h1>
+
+<p>
+    <a asp-action="Create">Thêm Chính Sách</a>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                           <div class="ButtonArea">
+                              <button  id="DeleteAll" class="badge bg-danger"  disabled>Xóa Những Mục Đã Chọn</button>
+                           </div>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Chọn Tất Cả <input type="checkbox" id="CheckAll" /> </th>
+                                        <th>No.</th>
+                                        <th>Tên Chính Sách</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach(var item in Model)
+                                        {
+                                            i++;
+                                    <tr>
+                                                <td>
+                                                    <input type="checkbox" value="@item.PolicyId" class="cb" name="ProductIDList"/>
+                                                </td>
+                                                <td>@i</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.PolicyTitle)</td>
+                                            <td>
+                                                <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.PolicyId">Sửa</a>
+                                                @if(User.HasClaim("Role","Admins"))
+                                                {
+                                                <form asp-area="AristinoAdmin" asp-controller="AdminAristinoPolicies" asp-action="Delete" asp-route-id="@item.PolicyId"  method="post" class="ConfirmDelete">
+                                                     <button class="badge bg-danger DeleteButton" style="margin-top:10px">Xóa</button>
+                                                </form>
+                                                }
+                                            </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{
+        FormClassName="ConfirmDelete"
+    })
+    @await Html.PartialAsync("~/AJAX/DeleteMultipleAJAX.cshtml",new{CheckBoxClassName=".cb",DeleteButton="#DeleteAll",ControllerName="AdminAristinoPolicies",ActionName="DeleteMultiple",getID="",VariableName=""})
+    @await Html.PartialAsync("~/JavascriptPartialView/DisableEnableButton.cshtml",new{DeleteAllButton="DeleteAll",CheckBoxClassName="cb"})
+    @await Html.PartialAsync("~/JavascriptPartialView/CheckAllCheckBox.cshtml",new{CheckAllButton="CheckAll",GetAllCheckBox="cb",DeleteButton="DeleteAll"})
+}

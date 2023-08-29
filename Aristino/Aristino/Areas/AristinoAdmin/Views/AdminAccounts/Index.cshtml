@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Aristino.ViewModel.AccountVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+
+<h1>Quản Lý Tài Khoản</h1>
+
+<p>
+    <a asp-action="Create">Tạo Tài Khoản</a>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Tài Khảon</th>
+                                        <th>Chức Vụ</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach(var item in Model)
+                                        {
+                            i++;
+                            <tr>
+                                                <td>@i</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Username)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Role.RoleName)</td>
+                                                <td>
+                                                    @if(item.AccountStatus==true)
+                                                    {
+                                                        <span class="badge bg-success">Hoạt Động</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-danger">Ban</span>
+                                                    }
+                                                </td>
+                                            <td>
+                                                @*<a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.AccountId" style="margin-bottom:15px">Sửa</a>*@
+                                                <form asp-area="AristinoAdmin" asp-action="Delete" asp-route-id="@item.AccountId"  method="post" class="ConfirmDelete">
+                                                     <button class="badge bg-danger DeleteButton" onclick="return confirmDelete(this)">Xóa</button>
+                                                </form>
+                                            </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @if (TempData["Error"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+}

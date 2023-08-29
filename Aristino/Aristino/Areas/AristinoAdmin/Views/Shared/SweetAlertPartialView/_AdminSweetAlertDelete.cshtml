@@ -1,0 +1,49 @@
+﻿@model dynamic
+@{
+    string FormClassName = Model.FormClassName;
+}
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+        var AllConfirmDelete=document.getElementsByClassName("@FormClassName");
+        for(let i=0;i<AllConfirmDelete.length;i++){
+            AllConfirmDelete[i].addEventListener('submit',function(e){
+                var form=this;
+                e.preventDefault();
+
+            const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+              },
+              buttonsStyling: false
+         })
+                swalWithBootstrapButtons.fire({
+                  title: 'Bạn Chắc Chắn Muốn Xóa Mục Này ?',
+                  text: "Sẽ Không Thể Hồi Phục Nếu Đã Xóa!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Có, Xóa Đi',
+                  cancelButtonText: 'Không, Đừng Xóa!',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                      'Đã Xóa!',
+                      'Đã Xóa Thành Công Mục Này',
+                      'success'
+                    ).then(function(){ form.submit()});
+                  } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    swalWithBootstrapButtons.fire(
+                      'Đã Hủy',
+                      'Yêu Cầu Xóa Đã Hủy',
+                      'error'
+                    )
+                  }
+                })
+             })
+          }
+</script>

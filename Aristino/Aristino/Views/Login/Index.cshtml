@@ -1,0 +1,82 @@
+﻿@model Aristino.ViewModel.AccountVM
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.ErrorList = TempData["InputError"];
+}
+			<!-- HEADING-BANNER START -->
+			<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/Registration/Registration.png")')">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Đăng Nhập</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a href="index.html">Trang Chủ</a></li>
+										<li>Đăng Ký</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- LOGIN-AREA START -->
+			<div class="login-area  pt-80 pb-80">
+				<div class="container">
+						<div class="row">
+							<form asp-area="AristinoAdmin" asp-controller="AccountLogin" asp-action="UserLogin" method="post">
+							<div class="col-md-6 col-sm-6 col-xs-12">
+								<div class="customer-login text-left">
+									<h4 class="title-1 title-border text-uppercase mb-30">Đã Có Tài Khoản</h4>
+									<p class="text-gray">Nếu Bạn Đã Có Tài Khoản, Hãy Đăng Nhập</p>
+									<input type="text" placeholder="Tên Tài Khoản..." asp-for="Username">
+									<input type="password" placeholder="Mật Khẩu" asp-for="Passwords">
+									@*<p><a href="#" class="text-gray">Forget your password?</a></p>*@
+									<button type="submit" data-text="login" class="button-one submit-button mt-15">Đăng Nhập</button>
+								</div>					
+							</div>
+							</form>
+							<form asp-area="AristinoAdmin" asp-controller="AdminAccounts" asp-action="CreateUserAccount" method="post">	
+							<div class="col-md-6 col-sm-6 col-xs-12">
+								<div class="customer-login text-left">
+									<h4 class="title-1 title-border text-uppercase mb-30">Đăng Ký</h4>
+									<p class="text-gray">Nếu Bạn Lần Đầu Tới Website Của Chúng Tôi, Hãy Đăng Ký</p>
+									<input type="text" placeholder="Họ Và Tên Đệm..." asp-for="FirstName">
+									<input type="text" placeholder="Tên..." asp-for="LastName">
+									<input type="email" placeholder="Địa Chỉ Email..." asp-for="Email">
+									<input type="date" placeholder="Ngày Sinh..." asp-for="Dob">
+									<input type="text" placeholder="Số Điện Thoại..." asp-for="PhoneNumber">
+									<input type="text" placeholder="Tên Tài Khoản..." asp-for="Username">
+									<input type="password" placeholder="Mật Khẩu" asp-for="Passwords">
+									<input type="password" placeholder="Xác Nhận Mật Khẩu..." asp-for="ConfirmPasswords">
+									<button type="submit" data-text="regiter" class="button-one submit-button mt-15">Đăng Ký</button>
+								</div>					
+							</div>
+							</form>
+						</div>
+				</div>
+			</div>
+			<!-- LOGIN-AREA END -->
+@section Scripts{
+	@if (TempData["Error"] != null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+		@TempData.Remove("Error")
+	}
+	@if(TempData["Success"]!=null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+		@TempData.Remove("Success")
+	}
+	@if(TempData["InputError"]!=null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+		@TempData.Remove("InputError")
+	}
+}

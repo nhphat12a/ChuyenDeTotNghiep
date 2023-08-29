@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Aristino.ViewModel.OrderDetailVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    var i = 0;
+}
+
+<h1>Báo Cáo Chi Tiết @ViewBag.StartAndEndDate</h1>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                           <div class="ButtonArea" style="display:block">
+                               <form method="post" asp-action="Index">
+                               <span>Bộ Lọc:<br /></span>
+                               <label for="FromDate">Từ Ngày</label>
+                               <input type="date" id="FromDate" name="FromDate"/>
+                               <label for="ToDate">Đến Ngày</label>
+                               <input type="date" id="ToDate" name="ToDate"/>
+                               <button type="submit">Lọc</button>
+                               </form>
+                           </div>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Ngày Tạo Hóa Đơn</th>
+                                        <th>Mã Hóa Đơn</th>
+                                        <th>Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Đơn Giá</th>
+                                        <th>Thành Tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        @if (Model != null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                i++;
+                                        <tr>
+                                                <td>@i</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Order.OrderDate)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Order.OrderNumber)</td>
+                                               <td>@Html.DisplayFor(modelitem=>item.Product.ProductName)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Quantity)</td>
+                                                <td>@item.Price.ToString("C",System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</td>
+                                                <td>@Convert.ToInt32(item.Order.TotalPrice).ToString("C",System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</td>
+                                         </tr>
+                            }
+                        }
+                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+                    <section class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Chi Tiết</h4>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <span>Tổng Giá Tiền Hóa Đơn: @ViewBag.TotalPrice</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @if(TempData["Error"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+}

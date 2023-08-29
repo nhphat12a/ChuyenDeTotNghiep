@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Aristino</title>
+		<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+		<!-- Place favicon.ico in the root directory -->
+
+		<!-- Google Font -->
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,700,900' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+		<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+		<!-- all css here -->
+		<!-- bootstrap v3.3.6 css -->
+		<link rel="stylesheet" href="~/css/bootstrap.min.css">
+		<!-- animate css -->
+		<link rel="stylesheet" href="~/css/animate.css">
+		<!-- jquery-ui.min css -->
+		<link rel="stylesheet" href="~/css/jquery-ui.min.css">
+		<!-- meanmenu css -->
+		<link rel="stylesheet" href="~/css/meanmenu.min.css">
+		<!-- nivo-slider css -->
+		<link rel="stylesheet" href="~/lib/css/nivo-slider.css">
+		<link rel="stylesheet" href="~/lib/css/preview.css">
+		<!-- slick css -->
+		<link rel="stylesheet" href="~/css/slick.css">
+		<!-- lightbox css -->
+		<link rel="stylesheet" href="~/css/lightbox.min.css">
+		<!-- material-design-iconic-font css -->
+		<link rel="stylesheet" href="~/css/material-design-iconic-font.css">
+		<!-- All common css of theme -->
+		<link rel="stylesheet" href="~/css/default.css">
+		<!-- style css -->
+		<link rel="stylesheet" href="~/css/style.css">
+		<!-- shortcode css -->
+		<link rel="stylesheet" href="~/css/shortcode.css">
+		<!-- responsive css -->
+		<link rel="stylesheet" href="~/css/responsive.css">
+		<!-- modernizr css -->
+		<script src="~/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+	<div class="wrapper bg-dark-white">
+            @await Html.PartialAsync("_HeaderPartialView.cshtml")
+			@await Html.PartialAsync("SidebarPartialView.cshtml")
+			@await Html.PartialAsync("../Shared/_SearchPartialView.cshtml")
+            @RenderBody()
+			@await Html.PartialAsync("_FooterPartialView.cshtml")
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Aristino - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+		<!-- all js here -->
+		<!-- jquery latest version -->
+		<script src="~/js/vendor/jquery-1.12.0.min.js"></script>
+		<!-- bootstrap js -->
+		<script src="~/js/bootstrap.min.js"></script>
+		<!-- jquery.meanmenu js -->
+		<script src="~/js/jquery.meanmenu.js"></script>
+		<!-- slick.min js -->
+		<script src="~/js/slick.min.js"></script>
+		<!-- jquery.treeview js -->
+		<script src="~/js/jquery.treeview.js"></script>
+		<!-- lightbox.min js -->
+		<script src="~/js/lightbox.min.js"></script>
+		<!-- jquery-ui js -->
+		<script src="~/js/jquery-ui.min.js"></script>
+		<!-- jquery.nivo.slider js -->
+		<script src="~/lib/js/jquery.nivo.slider.js"></script>
+		<script src="~/lib/home.js"></script>
+		<!-- jquery.nicescroll.min js -->
+		<script src="~/js/jquery.nicescroll.min.js"></script>
+		<!-- countdon.min js -->
+		<script src="~/js/countdon.min.js"></script>
+		<!-- wow js -->
+		<script src="~/js/wow.min.js"></script>
+		<!-- plugins js -->
+		<script src="~/js/plugins.js"></script>
+		<!-- main js -->
+		<script src="~/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

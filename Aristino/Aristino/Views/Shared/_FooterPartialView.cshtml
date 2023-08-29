@@ -1,0 +1,76 @@
+﻿@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessors
+@{
+	var session = HttpContextAccessors.HttpContext.Session;
+	var getPolicy = session.GetString("AristinoPolicy");
+	var Policies = new List<AristinoPolicy>();
+	if(getPolicy!=null)
+	{
+		Policies = JsonConvert.DeserializeObject<List<AristinoPolicy>>(getPolicy);
+	}
+}
+			<!-- FOOTER START -->
+			<footer>
+				<!-- Footer-area start -->
+				<div class="footer-area">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+								<div class="single-footer">
+									<h3 class="footer-title  title-border">Liên Hệ Với Chúng Tôi</h3>
+									<ul class="footer-contact">
+										<li><span>Địa Chỉ :</span>Vincom Plaza, 44-46 Lê Thánh Tôn, Tân Lập<br>Thành Phố Nha Trang, Khánh Hòa</li>
+										<li><span>Điện Thoại :</span>0258 3901 228</li>
+										<li><span>Email :</span>online@kgvietnam.com</li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+								<div class="single-footer">
+									<h3 class="footer-title  title-border">Tài Khoản</h3>
+									<ul class="footer-menu">
+										<li><a asp-controller="Customers" asp-action="UserDetail"><i class="zmdi zmdi-dot-circle"></i>Tài Khoản Của Tôi</a></li>
+										<li><a asp-controller="UserCartArea" asp-action="Wishlists"><i class="zmdi zmdi-dot-circle"></i>Danh Sách Yêu Thích</a></li>
+										<li><a asp-controller="UserCartArea" asp-action="Cart"><i class="zmdi zmdi-dot-circle"></i>Giỏ Hàng Của Tôi</a></li>
+										<li><a asp-controller="BlogsPage" asp-action="AllBlog"><i class="zmdi zmdi-dot-circle"></i>Blogs</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+								<div class="single-footer">
+									<h3 class="footer-title  title-border">Chính Sách</h3>
+									<ul class="footer-menu">
+							@foreach (var item in Policies)
+							{
+										<li><a asp-controller="AristinoPolicies" asp-action="Index" asp-route-PolicyID="@item.PolicyId"><i class="zmdi zmdi-dot-circle"></i>@item.PolicyTitle</a></li>
+							}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Footer-area end -->
+				<!-- Copyright-area start -->
+				<div class="copyright-area">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-6 col-xs-12">
+								<div class="copyright">
+									<p class="mb-0">Copyright <i class="fa fa-copyright"></i> 2018 <span><a href="https://freethemescloud.com/" target="_blank" >Free Themes Cloud</a></span> . All rights reserved. </p>
+								</div>
+							</div>
+							<div class="col-sm-6 col-xs-12">
+								<div class="payment  text-right">
+									<a href="#"><img src="img/payment/1.png" alt="" /></a>
+									<a href="#"><img src="img/payment/2.png" alt="" /></a>
+									<a href="#"><img src="img/payment/3.png" alt="" /></a>
+									<a href="#"><img src="img/payment/4.png" alt="" /></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Copyright-area start -->
+			</footer>
+			<!-- FOOTER END -->

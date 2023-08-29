@@ -1,0 +1,140 @@
+﻿@model IEnumerable<Aristino.ViewModel.ProductVM>
+
+@{
+	ViewData["Title"] = "GetByCategory";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- HEADING-BANNER START -->
+				<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/SearchBanner/searchBanner.png")');background-repeat:no-repeat;background-size:cover">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="heading-banner">
+									<div class="heading-banner-title">
+										<h2>Search</h2>
+									</div>
+									<div class="breadcumbs pb-15">
+										<ul>
+											<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+											<li>Shop</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<!-- HEADING-BANNER END -->
+			<!-- PRODUCT-AREA START -->
+			<div class="product-area pt-80 pb-80 product-style-2">
+				<div class="container">
+					<!-- Shop-Content End -->
+					<div class="shop-content">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="product-option mb-30 clearfix">
+									<!-- Filter start -->
+									<div class="dropdown floatleft">
+										<button class="option-btn">
+										Filter
+										</button>
+										<div class="dropdown-menu dropdown-width" >
+											<!-- Widget-Filter start -->
+											<aside class="widget widget-size">
+												<div class="widget-title">
+													<h4>Filter</h4>
+												</div>
+												<div class="widget-info size-filter clearfix">
+													<ul>
+														<form method="post" asp-controller="ProductsByCategory" asp-action="GetByCategory">
+														<li> Category:
+														<select id="CategoryList" name="CategoryId">
+														@foreach (Category category in ViewBag.CategoryList)
+														{
+																<option value="@category.CategoryId">@category.CategoryName</option>
+														}
+														</select>
+														</li>
+														<li> Color:
+														<select id="ColorList" name="color">
+														@foreach (Color color in ViewBag.ColorList)
+														{
+																<option value="@color.ColorName">@color.ColorName</option>
+														}
+														</select>
+														</li>
+														<li> Size:
+														<select id="SizeList" name="size">
+														@foreach (Size size in ViewBag.SizeList)
+														{
+																<option value="@size.SizeName">@size.SizeName</option>
+														}
+														</select>
+														</li>
+														<li>
+															Price:
+															<div class="widget-info">
+																<div class="price_filter">
+																	<div class="price_slider_amount">
+																		<input type="submit"  value="You range :"/> 
+																		<input type="text" id="amount" name="price" placeholder="Add Your Price" readonly />VND
+																	</div>
+																	<div id="slider-range"></div>
+																</div>
+															</div>
+														</li>
+														<li>
+															<button type="submit" class="button-one mt-20">Submit</button>
+														</li>
+														</form>
+													</ul>
+												</div>
+											</aside>
+											<!-- Widget-Filter end -->
+										</div>
+									</div>	
+									<!-- Filter end -->
+									<div class="showing text-right">
+										<p class="mb-0 hidden-xs">Tìm Thấy @ViewBag.ResultCount Kết Quả</p>
+									</div>
+								</div>						
+							</div>	
+							<div class="col-md-12">
+								<div class="row">
+									<!-- Single-product start -->
+						@foreach (var item in Model)
+						{
+											<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+												<div class="single-product">
+													<div class="product-img">
+														<span class="pro-label new-label">new</span>
+														<span class="pro-price-2">@Html.DisplayFor(modelitem=>item.Price)</span>
+														<a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)" alt="" style="width:270px!important;height:270px !important" /></a>
+													</div>
+													<div class="product-info clearfix text-center">
+														<div class="fix">
+															<h4 class="post-title"><a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId">@Html.DisplayFor(modelitem=>item.ProductName)</a></h4>
+														</div>
+														<div class="fix">
+															<span class="pro-rating">
+																<a href="#"><i class="zmdi zmdi-star"></i></a>
+																<a href="#"><i class="zmdi zmdi-star"></i></a>
+																<a href="#"><i class="zmdi zmdi-star"></i></a>
+																<a href="#"><i class="zmdi zmdi-star-half"></i></a>
+																<a href="#"><i class="zmdi zmdi-star-half"></i></a>
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- Single-product end -->
+						}
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Shop-Content End -->
+				</div>
+			</div>
+			<!-- PRODUCT-AREA END -->

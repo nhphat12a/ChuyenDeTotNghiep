@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Aristino.ViewModel.OrderVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+<h1>Quản Lý Hóa Đơn</h1>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Mã Hóa Đơn</th>
+                                        <th>Người Đặt Mua</th>
+                                        <th>Hình Thức Thanh Toán</th>
+                                        <th>Ngày Giao</th>
+                                        <th>Trạng Thái Đơn Hàng</th>
+                                        <th>Đã Thanh Toán</th>
+                                        <th>Payment Date</th>
+                                        <th>Tổng Tiền</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    i++;
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.OrderNumber)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Customer.FirstName) @Html.DisplayFor(modelitem=>item.Customer.LastName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Payment.PaymentName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.ShipDate)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Transac.TransacName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.IsPaid)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.PaymentDate)</td>
+                                                    <td>@Convert.ToInt32(item.TotalPrice).ToString("C",System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</td>
+                                                <td>
+                                                    <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.OrderId">Chỉnh Sửa</a>
+                                                    <a asp-action="Details" class="badge bg-success" asp-route-id="@item.OrderId">Chi Tiết</a>
+                                                    <form method="post" class="ConfirmDelete" asp-action="Delete" asp-route-OrderID="@item.OrderId">
+                                                        <button type="submit" class="badge bg-danger">Xóa</button>
+                                                     </form>
+                                                </td>
+                                        </tr>
+                                                 }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @if (TempData["Error"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+}

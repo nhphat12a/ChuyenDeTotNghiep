@@ -1,0 +1,56 @@
+﻿@model dynamic
+@{
+    var AddButton = Model.AddButton;
+    var AllCheckBoxClassName = Model.AllCheckBoxClassName;
+    var GetID = Model.GetID;
+    string ControllerName = Model.ControllerName;
+    string ActionName = Model.ActionName;
+    var VariableName = Model.VariableName;
+}
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script>
+    $("@AddButton").on("click",function(){
+        var getToken='@Html.AntiForgeryToken()';
+        var token=$(getToken).val();
+        var getID=$("@GetID").val();
+        console.log(getID);
+        const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+              },
+              buttonsStyling: false
+         })
+                swalWithBootstrapButtons.fire({
+                  title: 'Bạn Muốn Thêm Những Mục Này ?',
+                  icon: 'info',
+                  showCancelButton: true,
+                  confirmButtonText: 'Có, Thêm',
+                  cancelButtonText: 'Không, Không Thêm',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                        var formdata=new FormData();
+                        $("@AllCheckBoxClassName:checked").each(function(){
+                            formdata.append("ProductIDList",parseInt($(this).val()));
+                        })
+                        formdata.append("@VariableName",parseInt(getID));
+                        $.ajax({
+                                 url: '@Url.Action(ActionName,ControllerName)',
+                                 type:"POST",
+                                 headers:{
+                                        'RequestVerificationToken':token
+                                    },
+                                 data:formdata,
+                                 processData: false,
+                                 contentType: false,
+                                  success: function(response){
+                                      window.location.href=response.redirectToUrl
+                                }
+                       });
+                  }
+               })
+    })
+</script>

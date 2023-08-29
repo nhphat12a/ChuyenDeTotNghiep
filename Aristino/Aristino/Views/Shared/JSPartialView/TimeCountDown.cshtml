@@ -1,0 +1,38 @@
+﻿@model dynamic
+@{
+    ViewBag.GetEndTime = Model.GetEndTime;
+    var getShowTimeInput = Model.getShowTimeInput;
+}
+<script>
+// Update the count down every 1 second
+var x = setInterval(function() {
+    var getInput=document.getElementsByClassName("@getShowTimeInput");
+    var getCheckSaleInput=document.getElementsByClassName("CheckSale");
+        // Set the date we're counting down to
+    var EndSaleList=@Html.Raw(Json.Serialize(ViewBag.GetEndTime));
+    var i=0;
+    for(let input=0;input<getCheckSaleInput.length;input++)
+    {
+        if(getCheckSaleInput[input].value==="isSale")
+        {
+             var countDownDate = new Date(EndSaleList[i]).getTime();
+          // Get today's date and time
+             var now = new Date().getTime();
+              // Find the distance between now and the count down date
+              var distance = countDownDate - now;
+
+              // Time calculations for days, hours, minutes and seconds
+              var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+              var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+              var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+               getInput[input].innerHTML=days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+                 if (distance < 0) {
+                    clearInterval(x);
+                    location.reload();
+                  }
+            i++;
+        }
+    }
+}, 1000);
+</script>

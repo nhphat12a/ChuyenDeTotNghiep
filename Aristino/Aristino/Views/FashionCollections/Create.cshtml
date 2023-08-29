@@ -1,0 +1,46 @@
+﻿@model Aristino.Models.FashionCollection
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>FashionCollection</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CollectionName" class="control-label"></label>
+                <input asp-for="CollectionName" class="form-control" />
+                <span asp-validation-for="CollectionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CollectionDes" class="control-label"></label>
+                <input asp-for="CollectionDes" class="form-control" />
+                <span asp-validation-for="CollectionDes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CollectionThumbnail" class="control-label"></label>
+                <input asp-for="CollectionThumbnail" class="form-control" />
+                <span asp-validation-for="CollectionThumbnail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CollectionDisable" class="control-label"></label>
+                <input asp-for="CollectionDisable" class="form-control" />
+                <span asp-validation-for="CollectionDisable" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

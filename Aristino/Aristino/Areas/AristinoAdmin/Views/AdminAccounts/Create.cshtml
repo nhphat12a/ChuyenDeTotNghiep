@@ -1,0 +1,97 @@
+﻿@model Aristino.ViewModel.AccountVM
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ErrorList = TempData["ErrorList"];
+}
+<h1>Tạo Tài Khoản Nhân Viên</h1>
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Create" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Họ</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="FirstName" placeholder="Họ">
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Tên</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text"  class="form-control"
+                                                            asp-for="LastName" placeholder="Tên">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Tên Tài Khoản</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control" placeholder="Tên Tài Khoản" asp-for="Username" />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Mật Khẩu</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="password" class="form-control" placeholder="Mật Khẩu" asp-for="Passwords"/>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Email</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="email" class="form-control" placeholder="Email" asp-for="Email" />
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Ngày Sinh</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="date" class="form-control" placeholder="Email" asp-for="Dob" />
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Số Điện Thoại</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number" class="form-control" placeholder="Số Điện Thoại" asp-for="PhoneNumber" />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Giới Tính</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="GenderId" asp-items="ViewBag.Gender">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Tạo</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Quay Lại</a>
+</div>
+@section Scripts{
+    @if(TempData["ErrorList"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList});
+        @TempData.Remove("ErrorList")
+    }
+    @if (TempData["Error"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        ;
+        @TempData.Remove("Error")
+    }
+}

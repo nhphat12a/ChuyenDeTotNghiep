@@ -1,0 +1,451 @@
+﻿@model IEnumerable<Aristino.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+			<!-- HEADING-BANNER START -->
+			@foreach(var item in Model)
+			{
+				<input type="hidden" value="@item.ProductId" id="ProductId"/>
+				<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)');background-repeat:no-repeat;background-size:100%">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>@Html.DisplayFor(modelitem=>item.ProductName)</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+										<li>@Html.DisplayFor(modelitems=>item.ProductName)</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- PRODUCT-AREA START -->
+			<div class="product-area single-pro-area pt-80 pb-80 product-style-2">
+				<div class="container">	
+					<div class="row shop-list single-pro-info no-sidebar">
+						<!-- Single-product start -->
+						<div class="col-lg-12">
+							<div class="single-product clearfix">
+								<!-- Single-pro-slider Big-photo start -->
+								<div class="single-pro-slider single-big-photo view-lightbox slider-for">
+									@foreach(var Bigimage in ViewBag.ImageGallery){
+									<div>
+										<img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+Bigimage)" alt="" />
+										<a class="view-full-screen" href="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+Bigimage)"  data-lightbox="roadtrip" data-title="My caption">
+											<i class="zmdi zmdi-zoom-in"></i>
+										</a>
+									</div>
+									}
+								</div>
+								<!-- Single-pro-slider Big-photo end -->								
+								<div class="product-info">
+									<div class="fix">
+										<h4 class="post-title floatleft">@Html.DisplayFor(modelitem=>item.ProductName)</h4>
+										<span class="pro-rating floatright">
+											@switch(item.StarRate[0])
+											{
+												case '0':
+													<p>Sản Phẩm Chưa Đánh Giá</p>
+													break;
+												case '1':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '2':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '3':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '4':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '5':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													break;
+												default:
+													break;
+											}
+											<span>(@ViewBag.CommentCount Đánh Giá)</span>
+										</span>
+										</div>
+								@if (item.Quantity > 0 && item.Active)
+								{
+									@if (item.Discount != 0)
+									{
+										var newPrice =item.Price - (item.Price * (Convert.ToDecimal(item.Discount) / 100));
+										<div class="fix mb-20">
+											<span class="pro-price">@Convert.ToInt32(newPrice) VND</span>
+											<input type="hidden" class="CheckSale" value="isSale"/>
+										</div>
+										<div>
+											<span class="pro-price">Giảm Giá Tới Ngày: @Html.DisplayFor(modelitem=>item.DiscountNavigation.EndSale)</span>
+										</div>
+										<div>
+											<span class="pro-price TimeCountDown"></span>
+										</div>
+									}
+									else
+									{
+										<div class="fix mb-20">
+											<span class="pro-price">@Html.DisplayFor(modelitem=>item.Price) VND</span>
+										</div>
+									}
+								}
+								else{
+									@if(item.Quantity<=0 && item.Active)
+									{
+											<div class="fix mb-20">
+													<span class="pro-price">Hết Hàng</span>
+												</div>
+									}
+									@if(!item.Active && Convert.ToBoolean(!item.ProductDiscontinue))
+									{
+										<div class="fix mb-20">
+													<span class="pro-price">Sản Phẩm Chuẩn Bị Kinh Doanh</span>
+												</div>
+									}
+									@if(Convert.ToBoolean(item.ProductDiscontinue))
+									{
+										<div class="fix mb-20">
+													<span class="pro-price">Sản Phẩm Ngừng Kinh Doanh</span>
+												</div>
+									}
+								}
+							<div class="product-description">
+										<p>@Html.DisplayFor(modelitem=>item.ShortDes)</p>
+									</div>
+									<!-- color start -->								
+									<div class="color-filter single-pro-color mb-20 clearfix">
+										<ul>
+											<li><span class="color-title text-capitalize">Color</span></li>
+											<li>
+												<select asp-items="ViewBag.ColorList" id="ProductColor" style="border:none">
+													<option></option>
+												</select>
+											</li>
+										</ul>
+									</div>
+									<!-- color end -->
+									<!-- Size start -->
+									<div class="size-filter single-pro-size mb-35 clearfix">
+										<ul>
+											<li><span class="color-title text-capitalize">size</span></li>
+											<li><select asp-items="ViewBag.SizeList" style="border:none" id="ProductSize">
+												<option></option>
+											</select></li>
+										</ul>
+									</div>
+									<div class="size-filter single-pro-size mb-35 clearfix">
+										<ul>
+											<li>Hàng Trong Kho:<span class="color-title text-capitalize" id="InStock">@item.Quantity</span></li>
+										</ul>
+									</div>
+									<!-- Size end -->
+									@if(item.Quantity>0 && item.Active)
+									{
+									<div class="clearfix">
+										<div class="cart-plus-minus">
+											<input type="text" value="1" name="qtybutton" class="cart-plus-minus-box" style="background-color:white!important">
+										</div>
+										<div class="product-action clearfix">
+											<a data-toggle="tooltip" data-placement="top" title="Wishlist" id="addWishlist"><i class="zmdi zmdi-favorite-outline"></i></a>
+											<a data-toggle="tooltip" data-placement="top" title="Add To Cart" id="submit-button"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+										</div>
+									</div>
+									}
+									<!-- Single-pro-slider Small-photo start -->
+									<div class="single-pro-slider single-sml-photo slider-nav">
+										@foreach(var SmallImage in ViewBag.ImageGallery)
+										{
+										<div>
+											<img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+SmallImage)" alt="" />
+										</div>
+										}
+									</div>
+									<!-- Single-pro-slider Small-photo end -->
+								</div>
+							</div>
+						</div>
+						<!-- Single-product end -->
+					</div>
+					<!-- single-product-tab start -->
+					<div class="single-pro-tab">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+								<div class="single-pro-tab-menu">
+									<!-- Nav tabs -->
+									<ul class="">
+										<li><a href="#description" data-toggle="tab">Mô Tả Chi Tiết</a></li>
+										<li class="active"><a href="#reviews"  data-toggle="tab">Đánh Giá</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div class="tab-pane" id="description">
+										<div class="pro-tab-info pro-description">
+											<h3 class="tab-title title-border mb-30">@Html.DisplayFor(modelitem=>item.ProductName)</h3>
+											@Html.Raw(item.ProductDescription)
+										</div>
+									</div>
+									<div class="tab-pane active" id="reviews">
+								@if (ViewBag.UserComment != null)
+								{
+										<div class="pro-tab-info pro-reviews">
+											<div class="customer-review mb-60">
+												<h3 class="tab-title title-border mb-30">Bình Luận Của Bạn</h3>
+												<ul class="product-comments clearfix">
+													<li class="mb-30">
+													@foreach (Comment comment in ViewBag.UserComment)
+													{
+														<div class="pro-reviewer">
+															<img src="@Url.Content("~/uploads/Customers/"+comment.Customer.Email+"/"+comment.Customer.Avatar)" alt="" style="width:90px;height:100px"/>
+														</div>
+														<div class="pro-reviewer-comment">
+															<div class="fix">
+																<div class="floatleft mbl-center">
+																	<h5 class="text-uppercase mb-0"><strong>@comment.Customer.FirstName @comment.Customer.LastName</strong></h5>
+																	<p class="reply-date">@comment.CommentedDate</p>
+																</div>
+																<div class="comment-reply floatright">
+																	<a class="DeleteComment"><i class="zmdi zmdi-close"></i></a>
+																	<input type="hidden" value="@comment.CommentId" class="CommentId">
+																</div>
+															</div>
+															@switch (comment.StarRating)
+															{
+																case 20:
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	break;
+																case 40:
+																	<a><i class="zmdi zmdi-star" style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star" style="color:orange"></i></a>
+																	break;
+																case 60:
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	break;
+																case 80:
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	break;
+																case 100:
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+																	break;
+																default:
+																	break;
+															}
+															<p class="mb-0">@comment.CommentContent</p>
+														</div>
+														}
+													</li>
+												</ul>
+												<div class="AllUserComment">
+													<a asp-action="AllProductComment" asp-route-productId="@item.ProductId">Xem Tất Cả Bình Luận</a>
+												</div>
+											</div>
+											<div class="leave-review">
+												<h3 class="tab-title title-border mb-30">Viết Bình Luận</h3>
+											@*Đánh giá sao bằng cách lấy giá trị width của thẻ star-value trong element div có id là basic*@
+														<div id="basic"></div>
+												<div class="reply-box">
+													<div class="row">
+														<div class="col-md-6">
+															<input type="text" placeholder="Tiêu Đề..." name="name" id="CommentTitle" />
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-md-12">
+															<textarea class="custom-textarea" name="message" placeholder="Bình Luận..." ></textarea>
+															<button data-text="submit review" class="button-one submit-button mt-20">Đăng Bình Luận</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+								}
+								else
+								{
+									<div class="pro-tab-info pro-reviews">
+												<div class="leave-review">
+													<h3 class="tab-title title-border mb-30">Viết Bình Luận</h3>
+													<div id="basic"></div>
+													<div class="reply-box">
+														<div class="row">
+															<div class="col-md-6">
+																		<input type="text" placeholder="Tiêu Đề..." name="name" id="CommentTitle" />
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																		<textarea class="custom-textarea" name="message" placeholder="Bình Luận..." ></textarea>
+																<button data-text="submit review" class="button-one submit-button mt-20">Đăng Bình Luận</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+								}
+							</div>
+								</div>									
+							</div>
+						</div>
+					</div>
+					<!-- single-product-tab end -->
+				</div>
+			</div>
+			<div id="partialView">
+			</div>
+			<!-- PRODUCT-AREA END -->
+			}
+			<div class="product-area pt-80 pb-35">
+					<div class="container">
+						<!-- Section-title start -->
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="section-title text-center">
+									<h2 class="title-border">Những Sản Phẩm Tương Tự</h2>
+								</div>
+							</div>
+						</div>
+						<!-- Section-title end -->
+						<div class="row cus-row-30">
+							<div class="product-slider arrow-left-right">
+								<!-- Single-product start -->
+				@foreach (Product item1 in ViewBag.RecommendProduct)
+				{
+											<div class="single-product col-lg-12">
+												<div class="product-img">
+													<span class="pro-label new-label">new</span>
+													<a  asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item1.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item1.ProductName+"/"+item1.ProductImage)" alt="@item1.ProductName" style="height:250px;width:250px" /></a>
+												</div>
+												<div class="product-info clearfix">
+													<div class="fix">
+														<h4 class="post-title floatleft"><a href="#">@Html.DisplayFor(modelitem=>item1.ProductName)</a></h4>
+														<p class="floatright hidden-sm hidden-xs">@Html.DisplayFor(modelitem=>item1.Category.CategoryName)</p>
+													</div>
+													<div class="fix">
+								@if (item1.Discount != 0)
+								{
+									var newPrice = item1.Price * Convert.ToDecimal(item1.Discount) / 100;
+																<span class="pro-price floatleft"><s>@Html.DisplayFor(modelitem=>item1.Price)</s> @newPrice VNĐ</span>
+								}
+								else
+								{
+																<span class="pro-price floatleft">@Html.DisplayFor(modelitem=>item1.Price) VNĐ</span>
+								}
+												<span class="pro-rating floatright">
+											@switch(item1.StarRate[0])
+											{
+												case '0':
+													<p>Sản Phẩm Chưa Đánh Giá</p>
+													break;
+												case '1':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '2':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '3':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '4':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star-outline"></i></a>
+													break;
+												case '5':
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													<a><i class="zmdi zmdi-star"></i></a>
+													break;
+												default:
+													break;
+											}
+														</span>
+													</div>
+												</div>
+											</div>
+				}
+								<!-- Single-product end -->
+							</div>
+						</div>
+					</div>
+				</div>
+
+@section Scripts{
+	@*@await Html.PartialAsync("~/JavascriptPartialView/StarRating.cshtml");*@
+	@await Html.PartialAsync("~/JavascriptPartialView/StarRatingView.cshtml",new{UserRating=""});
+	@await Html.PartialAsync("./JSPartialView/QuantityButtonProductDetail.cshtml")
+	@await Html.PartialAsync("~/AJAX/DeleteButton.cshtml",
+	new{DeleteButton=".DeleteComment",ItemId=".CommentId",ActionName="DeleteComment",ControllerName="AdminComments",WarningMessage="Delete This Comment ?",
+	ParentDiv=".comment-reply",FormDataAppend="CommentId"})
+	@await Html.PartialAsync("~/AJAX/UserComment.cshtml",new{
+		TitleInputId="#CommentTitle",CommentInput=".custom-textarea",ActionName="AddComment",ControllerName="AdminComments",SubmitButton=".submit-button",ContentId="#ProductId",FormAppend="ProductId"
+	})
+	@await Html.PartialAsync("~/AJAX/AjaxForUserCart.cshtml",new{
+		ProductIdInputClass="#ProductId",ColorInputClass="#ProductColor",SizeInputClass="#ProductSize",QuantityInputClass=".cart-plus-minus-box",ActionName="AddCart",ControllerName="UserCartArea",SubmitButton="#submit-button"
+	})
+	@await Html.PartialAsync("~/AJAX/AjaxForUserCart.cshtml",new{
+		ProductIdInputClass="#ProductId",ColorInputClass="#ProductColor",SizeInputClass="#ProductSize",QuantityInputClass=".cart-plus-minus-box",ActionName="AddToWishlist",ControllerName="UserCartArea",
+		SubmitButton="#addWishlist"
+	})
+	@if (ViewBag.CheckIfSale != 0)
+	{
+		@await Html.PartialAsync("JSPartialView/TimeCountDown.cshtml",new{GetEndTime=ViewBag.EndSale,getShowTimeInput="TimeCountDown"})
+	}
+
+}

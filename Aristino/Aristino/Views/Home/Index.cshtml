@@ -1,0 +1,441 @@
+﻿@model IEnumerable<Aristino.ViewModel.ProductVM>
+@{
+	ViewData["Title"] = "Home Page";
+	ViewBag.HasCookie = TempData["HasCookie"];
+
+}
+			<!-- SLIDER-BANNER-AREA START -->
+			<section class="slider-banner-area clearfix">
+				<!-- Sidebar-social-media start -->
+				<div class="sidebar-social hidden-xs">
+					<div class="table">
+						<div class="table-cell">
+							<ul>
+								<li><a href="https://www.youtube.com/channel/UCxLkYQ3yrgqxGRzWO-I2PZg" target="_blank" title="Google Plus"><i class="zmdi zmdi-youtube-play"></i></a></li>
+								<li><a href="https://twitter.com/aristino_vn" target="_blank" title="Twitter"><i class="zmdi zmdi-twitter"></i></a></li>
+								<li><a href="https://www.facebook.com/ilovearistino/" target="_blank" title="Facebook"><i class="zmdi zmdi-facebook"></i></a></li>
+								<li><a href="https://www.instagram.com/aristino_official/" target="_blank" title="Linkedin"><i class="zmdi zmdi-instagram"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- Sidebar-social-media start -->
+				<div class="banner-left floatleft">
+					<!-- Slider-banner start -->
+					<div class="slider-banner">
+						@foreach(Category category in ViewBag.CategoryOne)
+						{
+						<div class="single-banner banner-1">
+								<a class="banner-thumb" href="#"><img src="@Url.Content("~/uploads/AdminCategories/"+category.CategoryName+"/"+category.Avatar)" alt="" style="width:450px !important;height:375px!important"/></a>
+							<span class="price hidden-md">@category.CategoryName</span>
+							<div class="banner-brief">
+								<h2 class="banner-title hidden-md"><a asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@category.CategoryId"> @category.CategoryName</a></h2>
+							</div>
+							<a asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@category.CategoryId"class="button-one font-16px" data-text="Buy now">View</a>
+						</div>
+						}
+						@foreach(Category category in ViewBag.CategoryTwo){
+						<div class="single-banner banner-2">
+							<a class="banner-thumb" asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@category.CategoryId"><img src="@Url.Content("~/uploads/AdminCategories/"+category.CategoryName+"/"+category.Avatar)" alt="" style="width:450px !important;height:375px!important"/></a>
+							<div class="banner-brief">
+								<h2 class="banner-title hidden-md"><a href="#">@category.CategoryName</a></h2>
+										<a asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@category.CategoryId" class="button-one font-16px" data-text="Buy now">View</a>
+							</div>
+						</div>
+						}
+					</div>
+					<!-- Slider-banner end -->
+				</div>
+				<div class="slider-right floatleft">
+					<!-- Slider-area start -->
+					<div class="slider-area">
+						<div class="bend niceties preview-2">
+							<div id="ensign-nivoslider" class="slides">
+								@foreach(FashionCollection fashion in ViewBag.FashionCollection)
+								{
+									<a asp-controller="FashionCollections" asp-action="Index" asp-route-CollectionID="@fashion.CollectionId"><img src="@Url.Content("~/uploads/AdminFashionCollections/"+fashion.CollectionName+"/"+fashion.CollectionThumbnail)" alt="" title="#slider-direction-1"/></a>
+								}
+							</div>
+							<!-- direction 1 -->
+							<div id="slider-direction-1" class="t-cn slider-direction">
+								<div class="slider-progress"></div>
+								<div class="slider-content t-lfl s-tb slider-1">
+									<div class="title-container s-tb-c title-compress">
+										<div class="layer-1">
+											<div class="wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeIn" data-wow-duration="1.5s" data-wow-delay="1.5s">
+											</div>
+											<div class="wow fadeIn" data-wow-duration="2s" data-wow-delay="2.5s">
+											</div>
+											<div class="wow fadeIn" data-wow-duration="2.5s" data-wow-delay="3.5s">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- direction 2 -->
+							<div id="slider-direction-2" class="slider-direction">
+								<div class="slider-progress"></div>
+								<div class="slider-content t-lfl s-tb slider-1">
+									<div class="title-container s-tb-c title-compress">
+										<div class="layer-1">
+											<div class="wow fadeInUpBig" data-wow-duration="1s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="1.5s" data-wow-delay="0.5s">
+												<h2 class="slider-title1 text-uppercase">furniture</h2>
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="2s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="2.5s" data-wow-delay="0.5s">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- direction 3 -->
+							<div id="slider-direction-3" class="slider-direction">
+								<div class="slider-progress"></div>
+								<div class="slider-content t-lfl s-tb slider-1">
+									<div class="title-container s-tb-c title-compress">
+										<div class="layer-1">
+											<div class="wow fadeInUpBig" data-wow-duration="1s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="1.5s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="2s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="2.5s" data-wow-delay="0.5s">
+											</div>
+											<div class="wow fadeInUpBig" data-wow-duration="3s" data-wow-delay="0.5s">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Slider-area end -->
+				</div>
+				<!-- Sidebar-social-media start -->
+				<div class="sidebar-account hidden-xs">
+					<div class="table">
+						<div class="table-cell">
+							<ul>
+								<li><a class="search-open" href="#" title="Search"><i class="zmdi zmdi-search"></i></a></li>
+								<li><a asp-controller="Customers" asp-action="UserDetail" title="My-Account"><i class="zmdi zmdi-account"></i></a></li>
+								<li><a asp-controller="UserCartArea" asp-action="Wishlists" title="Wishlist"><i class="zmdi zmdi-favorite"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- Sidebar-social-media start -->
+			</section>
+			<!-- End Slider-section -->
+			<!-- PRODUCT-AREA START -->
+			<div class="product-area pt-80 pb-35">
+				<div class="container">
+					<!-- Section-title start -->
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="section-title text-center">
+								<h2 class="title-border">Sản Phẩm Của Cửa Hàng</h2>
+							</div>
+						</div>
+					</div>
+					<!-- Section-title end -->
+					<div class="row cus-row-30">
+						<div class="product-slider arrow-left-right">
+							<!-- Single-product start -->
+							@foreach(var item in Model.Where(x=>x.ProductDiscontinue!=true))
+							{
+							<div class="single-product col-lg-12">
+								<div class="product-img">
+									<span class="pro-label new-label">new</span>
+									<a  asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)" alt="@item.ProductName" style="height:250px;width:250px" /></a>
+								</div>
+								<div class="product-info clearfix">
+									<div class="fix">
+										<h4 class="post-title floatleft"><a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId">@Html.DisplayFor(modelitem=>item.ProductName)</a></h4>
+										<p class="floatright hidden-sm hidden-xs">@Html.DisplayFor(modelitem=>item.Category.CategoryName)</p>
+									</div>
+									<div class="fix">
+								@if (item.Quantity > 0)
+								{
+									@if (item.Discount != 0)
+									{
+										var newPrice = item.Price - (item.Price*(Convert.ToDecimal(item.Discount) / 100));
+										<span class="pro-price floatleft"><s>@Html.DisplayFor(modelitem=>item.Price)</s> @Convert.ToInt32(newPrice) VNĐ</span>
+									}
+									else
+									{
+										<span class="pro-price floatleft">@Html.DisplayFor(modelitem=>item.Price) VNĐ</span>
+									}
+								}
+								else
+								{
+									<span class="pro-price floatleft">Hết Hàng</span>
+								}
+								<span class="pro-rating floatright">
+									@switch (item.StarRate[0])
+									{
+										case '0':
+											<p>Chưa Đánh Giá</p>
+											break;
+										case '1':
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											break;
+										case '2':
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											break;
+										case '3':
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											break;
+										case '4':
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star-outline"></i></a>
+											break;
+										case '5':
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											<a><i class="zmdi zmdi-star"></i></a>
+											break;
+										default:
+											break;
+									}
+										</span>
+									</div>
+								</div>
+							</div>
+							}
+							<!-- Single-product end -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PRODUCT-AREA END -->
+			<!-- COLLECTION-PRODUCT START -->
+			<div class="discount-product-area pb-50">
+				<div class="container">
+					<!-- Section-title start -->
+		@if (ViewBag.CollectionActive>0)
+		{
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="section-title text-center">
+								<h2 class="title-border">Bộ Sưu Tập</h2>
+							</div>
+						</div>
+					</div>
+		}
+					<!-- Section-title end -->
+					<div class="row">
+						<div class="discount-product-slider dots-bottom-right">
+							<!-- single-discount-product start -->
+							@foreach(FashionCollection fashion in ViewBag.FashionCollection)
+							{
+							if(!Convert.ToBoolean(fashion.CollectionDisable)){
+							<div class="col-lg-12">
+								<div class="discount-product">
+									<a asp-controller="FashionCollections" asp-action="Index" asp-route-CollectionID="@fashion.CollectionId"><img src="@Url.Content("~/uploads/AdminFashionCollections/"+fashion.CollectionName+"/"+fashion.CollectionThumbnail)" alt="" style="width:1170px;height:500px" /></a>
+									<div class="discount-img-brief">
+									</div>
+								</div>
+							</div>
+							}
+							}
+							<!-- single-discount-product end -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- DISCOUNT-PRODUCT END -->
+			<!-- DISCOUNT-PRODUCT START -->
+			<div class="discount-product-area pt-35">
+				<div class="container">
+		@if (ViewBag.AllBannerIsActive > 0)
+		{
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title text-center">
+						<h2 class="title-border">Sale Sốc Giới Hạn</h2>
+					</div>
+				</div>
+			</div>
+		}
+		<div class="row">
+						<div class="discount-product-slider dots-bottom-right">
+							<!-- single-discount-product start -->
+							@foreach(DiscountBanner discount in ViewBag.DiscountBannerList)
+							{
+								if(Convert.ToBoolean(discount.DisableDiscount) != true){
+							<div class="col-lg-12">
+								<div class="discount-product">
+									<img src="@Url.Content("~/uploads/AdminDiscountBanners/"+discount.DiscountName+"/"+discount.Banner)" alt="" style="width:1170px;height:500px" />
+									<div class="discount-img-brief">
+										<div class="onsale">
+											<span class="onsale-text">Đang Giảm Gía </span>
+											<span class="onsale-price">@discount.DiscountRate%</span>
+										</div>
+										<div class="discount-info">
+											<h1 class="text-dark-red hidden-xs">Discount @Html.DisplayFor(modelitem=>discount.DiscountRate)%</h1>
+											<p class="hidden-xs" style="color:white">@Html.DisplayFor(modelitem=>discount.DiscountDescription) </p>
+											<a asp-controller="DiscountBanners" asp-action="Discount" asp-route-id="@discount.DiscountId" class="button-one font-16px style-3 text-uppercase mt-5" data-text="Buy now">Buy now</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							}
+							}
+							<!-- single-discount-product end -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- DISCOUNT-PRODUCT END -->
+			<!-- PURCHASE-ONLINE-AREA START -->
+			<div class="product-area pt-80 pb-35">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="section-title text-center">
+								<h2 class="title-border">Danh Mục</h2>
+							</div>
+						</div>
+					</div>
+					<div class="row cus-row-30">
+						<div class="product-slider arrow-left-right">
+										@foreach(Category category in ViewBag.Category)
+										{
+											<div class="single-product col-lg-12">
+												<div class="product-img">
+													<a asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@category.CategoryId"><img src="@Url.Content("~/uploads/AdminCategories/"+category.CategoryName+"/"+category.Avatar)" alt="@category.CategoryName" style="height:250px;width:250px" /></a>
+												</div>
+												<div class="product-info clearfix">
+													<div class="fix">
+														<h4 class="post-title floatleft"><a asp-controller="ProductsByCategory" asp-action="GetByCategory" asp-route-id="@category.CategoryId">@Html.DisplayFor(modelitem=>category.CategoryName)</a></h4>
+													</div>
+												</div>
+											</div>
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PURCHASE-ONLINE-AREA END -->
+			<!-- BLGO-AREA START -->
+			<div class="blog-area pt-55">
+				<div class="container">
+					<!-- Section-title start -->
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="section-title text-center">
+								<h2 class="title-border">Tin Tức - Bài Viết</h2>
+							</div>
+						</div>
+					</div>
+					<!-- Section-title end -->
+					<div class="row">
+						<!-- Single-blog start -->
+						@foreach(Blog blog in ViewBag.Blog)
+						{
+						var CommentCount=0;
+						DateTime dateTime = DateTime.Parse(blog.PostDate);
+						string MonthName=System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dateTime.Month);
+							@foreach(var item in blog.BlogComments)
+							{
+								if(item.BlogId!=0)
+									CommentCount++;
+							}
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+							<div class="single-blog mt-30">
+								<div class="row">
+									<div class="col-lg-6 col-md-7 col-sm-7 col-xs-12">
+										<div class="blog-info">
+											<div class="post-meta fix">
+												<div class="post-date floatleft"><span class="text-dark-red">@dateTime.Day</span></div>
+												<div class="post-year floatleft">
+													<p class="text-uppercase text-dark-red mb-0">@MonthName,@dateTime.Year</p>
+													<h4 class="post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:190px"><a asp-controller="BlogDetail" asp-action="Index" asp-route-id="@blog.BlogId" tabindex="0">@Html.DisplayFor(modelitem=>blog.BlogTitle)</a></h4>
+												</div>
+											</div>
+											<div class="like-share fix">
+												<a href="#"><i class="zmdi zmdi-favorite"></i><span>@blog.BlogLike</span></a>
+												<a href="#"><i class="zmdi zmdi-comments"></i><span>@CommentCount</span></a>
+												<a href="#"><i class="zmdi zmdi-eye"></i><span>@blog.BlogViews</span></a>
+											</div>
+											<p>@blog.BlogTitle</p>
+											<a asp-controller="BlogDetail" asp-action="Index" asp-route-id="@blog.BlogId" class="button-2 text-dark-red">Đọc....</a>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-5 col-sm-5 col-xs-12">
+										<div class="blog-photo">
+											<a href="#"><img src="@Url.Content("~/uploads/AdminBlogs/"+blog.BlogTitle+"/"+blog.Thumbnail)" alt="" style="width:270px!important;height:230px!important"/></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						}
+						<!-- Single-blog end -->
+					</div>
+				</div>
+			</div>
+			<!-- BLGO-AREA END -->
+			<!-- SUBSCRIVE-AREA START -->
+			<div class="subscribe-area pt-80">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- SUBSCRIVE-AREA END -->
+@*<script>
+	var getFormWishlist=document.getElementsByClassName("formWishlist");
+	var getAnchorWishlist=document.getElementsByClassName("addWishlist");
+	for(let i=0;i<getAnchorWishlist.length;i++){
+		getAnchorWishlist[i].addEventListener("click",function(e){
+			e.preventDefault;
+			getFormWishlist[i].submit();
+		})
+	}
+</script>
+<script>
+	var getFormAddCart=document.getElementsByClassName("formCart");
+	var getAnchorAddCart=document.getElementsByClassName("addCart");
+	for(let i=0;i<getAnchorAddCart.length;i++){
+		getAnchorAddCart[i].addEventListener("click",function(e){
+			e.preventDefault;
+			getFormAddCart[i].submit();
+		})
+	}
+</script>*@
+@section Scripts{
+	@if(TempData["Error"]!=null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+		@TempData.Remove("Error")
+	}
+}

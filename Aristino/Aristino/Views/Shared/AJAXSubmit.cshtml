@@ -1,0 +1,38 @@
+﻿@model dynamic
+@{
+    string ActionName=Model.ActionName;
+    string ControllerName = Model.ControllerName;
+    var ButtonClass=Model.ButtonClass;
+    var InputValueClass = Model.InputValueClass;
+    string DivClassToRefresh = Model.DivClassToRefresh;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script>
+    $(document).ready(function(e){
+        var getTokenInput='@Html.AntiForgeryToken()';
+        var token=$(getTokenInput).val();
+        $(".@ButtonClass").on("click",function(){
+            var getParent=$(this).closest(".single-cart");
+            var getValue=parseInt(getParent.find(".@InputValueClass").val());
+            console.log(getValue);
+            var formdata=new FormData();
+            formdata.append("id",getValue);
+             $.ajax({
+                type:"POST",
+                url: '@Url.Action(ActionName,ControllerName)',
+                headers:{
+                    'RequestVerificationToken':token
+                },
+                data: formdata,
+
+                processData: false,
+                contentType: false,
+                success: function(response){
+                    $('.wrapper').html(response);
+                }
+              });
+
+        })
+
+    })
+</script>

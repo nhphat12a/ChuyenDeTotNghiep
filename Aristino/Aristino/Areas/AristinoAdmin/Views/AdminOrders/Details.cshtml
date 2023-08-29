@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Aristino.ViewModel.OrderDetailVM>
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+<h1>Chi Tiết Hóa Đơn @ViewBag.OrderNumber</h1>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Tên Sản Phẩm</th>
+                                        <th>Hình Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Đơn Giá</th>
+                                        <th>Tổng Giá Tiền</th>
+                                        <th>Giảm Giá</th>
+                                        <th>Kích Cỡ</th>
+                                        <th>Màu Sắc</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model){
+                                        i++;
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Product.ProductName)</td>
+                                                    <td><img src="@Url.Content("~/uploads/AdminProducts/"+item.Product.ProductName+"/"+item.Product.ProductImage)" style="width:75px;height:75px"/></td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Quantity)</td>
+                                                    <td>@Convert.ToInt32(item.ProductPrice).ToString("C",System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</td>
+                                                    <td>@item.Price.ToString("C",System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Discount)%</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Size)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Color)</td>
+                                                <td>
+                                                    <a asp-action="Edit" asp-controller="AdminProducts" asp-area="AristinoAdmin" class="badge bg-warning" asp-route-id="@item.Product.ProductId" style="margin-bottom:15px">Sửa</a>
+                                                    <form asp-area="AristinoAdmin" asp-action="Delete" asp-route-id="@item.OrderId"  method="post" class="ConfirmDelete">
+                                                         <button class="badge bg-danger DeleteButton" onclick="return confirmDelete(this)">Xóa</button>
+                                                    </form>
+                                                </td>
+                                        </tr>
+                                        }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>

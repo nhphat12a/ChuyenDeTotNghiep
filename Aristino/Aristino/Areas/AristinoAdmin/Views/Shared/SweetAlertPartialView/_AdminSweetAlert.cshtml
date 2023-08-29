@@ -1,0 +1,21 @@
+﻿@model dynamic
+@{
+    ViewBag.getErrorList = Model.getErrorList;
+}
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+        var getErrorList=@Html.Raw(Json.Serialize(ViewBag.getErrorList));
+            window.onload=function(){
+                    Swal.fire({
+                          title: '<strong>Error</strong>',
+                          icon: 'error',
+                          html:getErrorList,
+                          showCloseButton: true,
+                          showCancelButton: true,
+                          focusConfirm: false,
+                          confirmButtonText:'Ok'
+                })
+            }
+</script>

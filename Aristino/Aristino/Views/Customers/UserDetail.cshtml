@@ -1,0 +1,153 @@
+﻿@model Aristino.ViewModel.CustomerVM
+
+@{
+    ViewData["Title"] = "UserDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+			<!-- HEADING-BANNER START -->
+@if (ViewBag.CustomerImage != null)
+{
+	@foreach (var item in ViewBag.CustomerImage)
+	{
+		<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/uploads/Customers/"+ViewBag.CustomerEmail+"/"+item)');background-repeat:no-repeat;background-size:100%">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="heading-banner">
+							<div class="heading-banner-title">
+								<h2>Tài Khoản Của Tôi</h2>
+							</div>
+							<div class="breadcumbs pb-15">
+								<ul>
+									<li><a asp-action="Index" asp-controller="Home">Trang Chủ</a></li>
+									<li>Tài Khoản Của Tôi</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+else
+{
+		<div class="heading-banner-area overlay-bg">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Tài Khoản Của Tôi</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-action="Index" asp-controller="Home">Trang Chủ</a></li>
+										<li>Tài Khoản Của Tôi</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+}
+<!-- HEADING-BANNER END -->
+			<!-- MY-ACCOUNT-AREA START -->
+			<div class="my-account-area  pt-80 pb-80">
+				<div class="container">	
+					<div class="my-account">
+						<div class="row">
+							<div class="col-md-6 col-sm-6 col-xs-12">
+								<div class="panel-group" id="accordion">
+									<div class="panel">
+										<div class="my-account-menu" >
+											<a  data-toggle="collapse" data-parent="#accordion" href="#my-info" >
+											Thông Tin Cá Nhân
+											</a>
+										</div>
+										<div id="my-info" class="panel-collapse collapse in" >
+											<div class="panel-body">
+												<div class="billing-details shop-cart-table">
+													<form method="post" id="formupload" enctype="multipart/form-data" asp-action="UserDetail">
+													<input type="hidden" asp-for="CustomersId"/>
+													<input type="text" placeholder="Họ Và Tên Đệm..." asp-for="FirstName">
+													<input type="text" placeholder="Tên..." asp-for="LastName">
+													<input type="email" placeholder="Địa Chỉ Email..." asp-for="Email">
+													<input type="date" placeholder="Ngày Sinh..." asp-for="Dob">
+													<input type="text" placeholder="Số Điện Thoại..." asp-for="PhoneNumber">
+													<textarea placeholder="Địa Chỉ..." class="custom-textarea" asp-for="CustomerAddress"></textarea>
+													<input type="file" class="image-preview-filepond">
+													<input id="country_selector" type="text" style="width:100%">
+													<input type="text" id="country_selector_code" name="country_selector_code" data-countrycodeinput="1" style="visibility:hidden"/>
+													<button type="submit" data-text="save" class="button-one submit-button mt-15">Save</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>					
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+								<div class="panel-group" id="accordion-2">
+									<div class="panel">
+										<div class="my-account-menu" >
+											<a  data-toggle="collapse" data-parent="#accordion-2" href="#my-payment-method" >
+											Thông Tin Thanh Toán
+											</a>
+										</div>
+										<div id="my-payment-method" class="panel-collapse collapse in" >
+											<div class="panel-body">
+												<div class="payment-method  shop-cart-table">
+													<div class="payment-accordion">
+														<form method="post" asp-action="UpdatePaymentMethod">
+														<!-- Accordion start  -->
+														<input type="text" placeholder="Số Thẻ..." asp-for="CardNumber">
+														<input type="text" placeholder="Thông Tin Chủ Thẻ..." asp-for="CardOwner">
+														<input type="date" placeholder="Ngày Hết Hạn..." asp-for="ExpiredDate">
+														<input type="number" placeholder="CVC..." asp-for="Cvc">
+														<!-- Accordion end -->
+														<button type="submit" data-text="place order" class="button-one submit-button mt-15">Lưu</button>	
+														</form>
+													</div>															
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="panel">
+										<div class="my-account-menu my-account-menu-2" >
+											<a  asp-controller="CustomerOrders" asp-action="AllOrder">
+											Hóa Đơn Của Tôi
+											</a>
+										</div>
+									</div>
+									<div class="panel">
+										<div class="my-account-menu my-account-menu-2" >
+											<a  asp-controller="Customers" asp-action="PurchasedProducts">
+											Sản Phẩm Đã Mua
+											</a>
+										</div>
+									</div>
+								</div>								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- MY-ACCOUNT-CART-AREA END -->
+@section Scripts{
+	@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/CountrySelect/CountrySelectJS.cshtml",new{InputId="#country_selector",CountryCode=ViewBag.CountryCode})
+	@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/FilePond/_UploadImage.cshtml",
+	new{InputClass=".image-preview-filepond",FormId="#formupload",ActionName="UserDetail",ControllerName="Customers",ImageGallery=ViewBag.CustomerImage,ProductName=ViewBag.CustomerEmail,AllowMultiple="false"})
+	@if (TempData["Success"] != null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+		@TempData.Remove("Success")
+	}
+	@if(TempData["Error"]!=null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+		@TempData.Remove("Error")
+	}
+}

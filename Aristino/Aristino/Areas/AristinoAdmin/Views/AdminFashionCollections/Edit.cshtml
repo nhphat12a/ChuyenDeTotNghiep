@@ -1,0 +1,85 @@
+﻿@model Aristino.ViewModel.FashionCollectionVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Chỉnh Sửa</h1>
+
+<h4>Fashion Collection</h4>
+<hr />
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Edit" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <input type="hidden" asp-for="CollectionId"/>
+                                                    <div class="col-md-4">
+                                                        <label>Tên Collection</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="CollectionName" placeholder="Tên Collection">
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Mô Tả</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <textarea class="form-control" asp-for="CollectionDes"></textarea>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Banner</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                         <div class="card">
+                                                            <div class="card-content">
+                                                                <div class="card-body">
+                                                                    <!-- File uploader with image preview -->
+                                                                    <input type="file" class="image-preview-filepond">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Trạng Thái Collection</label>
+                                                    </div>
+                                                    <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                        <div class='form-check'>
+                                                            <div class="checkbox">
+                                                                <input type="radio" class="btn-check" name="ActiveButton" id="success-outlined"
+                                                                        autocomplete="off" asp-for="CollectionDisable" value="false">
+                                                                    <label class="btn btn-outline-success" for="success-outlined">Bật Collection</label>
+
+                                                                <input type="radio" class="btn-check" name="ActiveButton" id="danger-outlined"
+                                                                    autocomplete="off" asp-for="CollectionDisable" value="true">
+                                                                <label class="btn btn-outline-danger" for="danger-outlined">Tắt Collection</label>
+                                                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Sửa</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<div>
+    <a asp-action="Index">Quay Lại</a>
+</div>
+@section Scripts{
+    @await Html.PartialAsync("FilePond/_UploadImage.cshtml",new{
+        InputClass=".image-preview-filepond",FormId="#formupload",ControllerName="AdminFashionCollections",ActionName="Edit",ImageGallery=ViewBag.Image,
+        ProductName=ViewBag.CollectionName,AllowMultiple="false"
+    })
+    @await Html.PartialAsync("_AdminSummernoteRichTextEditor.cshtml",new{height=200,selector="#CollectionDes"})
+}

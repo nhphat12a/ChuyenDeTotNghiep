@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Aristino.ViewModel.CustomerVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+}
+<h1> Staff Account</h1>
+@foreach(var item in Model){
+                <section class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Thông Tin Cá Nhân</h4>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="basicInput">Họ và Tên</label>
+                                         <p class="form-control-static" id="staticInput">@item.FirstName @item.LastName</p>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="helpInputTop">Địa Chỉ</label>
+                                        <p class="form-control-static" id="staticInput">@item.CustomerAddress</p>
+                                    </div>
+                                        <div class="form-group">
+                                            <label for="helperText">Ngày Sinh</label>
+                                             <p class="form-control-static" id="staticInput">@item.Dob</p>
+                                        </div>
+                                    <div class="form-group">
+                                        <label for="helperText">Số Điện Thoại</label>
+                                         <p class="form-control-static" id="staticInput">@item.PhoneNumber</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="helperText">Email</label>
+                                         <p class="form-control-static" id="staticInput">@item.Email</p>
+                                    </div>
+                                     <div class="form-group">
+                                       <label for="disabledInput">Avatar</label>
+                                       <p class="form-control-static" id="staticInput"><img src="@Url.Content("~/uploads/Customers/"+item.Email+"/"+item.Avatar)" style="width:400px;height:250px;"></p>
+                                     </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="disabledInput">Giới Tính</label>
+                                         <p class="form-control-static" id="staticInput">@item.Gender.GenderName</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="disabledInput">Chức Vụ</label>
+                                        @foreach(var role in item.Accounts){
+                                        <p class="form-control-static" id="staticInput">@role.Role.RoleName</p>
+                                        }
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="ChangeButton" style="width:150px;height:30px;">
+                                            <a class="badge bg-primary" style="height:100%;width:100%;text-align:center" asp-action="UpdateInformation" asp-controller="Customers" asp-area="">Thay Đổi Thông Tin</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                }
+@section Scripts{
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+}

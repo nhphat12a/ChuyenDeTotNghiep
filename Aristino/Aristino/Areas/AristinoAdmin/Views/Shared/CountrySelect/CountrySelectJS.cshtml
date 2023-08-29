@@ -1,0 +1,20 @@
+﻿@model dynamic
+@{
+	var InputId = Model.InputId;
+	string CountryCode = Model.CountryCode;
+	if (CountryCode == null)
+	{
+		CountryCode = "vn";
+	}
+}
+<link rel="stylesheet" href="~/assets/vendors/countryselect/build/css/countrySelect.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="~/assets/vendors/countryselect/build/js/countrySelect.js"></script>
+<script>
+	$("@InputId").countrySelect({
+	defaultCountry: "@CountryCode",
+	//onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+	// responsiveDropdown: true,
+	preferredCountries: ['ca', 'gb', 'us']
+	});
+</script>

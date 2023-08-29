@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Aristino.ViewModel.ProductVM>
+
+@{
+    ViewData["Title"] = "AddProductToCollection";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+
+<h1>Thêm Sản Phẩm Vào Collection:@ViewBag.CollectionName</h1>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                           <div class="ButtonArea" style="display:flex;justify-content:space-between;">
+                              <button id="SelectAll" class="badge bg-success" disabled>Thêm Những Mục Đã Chọn</button>
+                              <input type="hidden" value="@ViewBag.CollectionID" id="CollectionId"/>
+                           </div>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Tên Sản Phẩm</th>
+                                        <th>Giá (VNĐ)</th>
+                                        <th>Hình Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Giảm Giá </th>
+                                        <th>Danh Mục</th>
+                                        <th>Màu Sắc</th>
+                                        <th>Kích Cỡ</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Đánh Giá</th>
+                                        <th>Chọn Tất Cả <input type="checkbox" id="CheckAll" /> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                                        <tr>
+                                                    <td>@i</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.ProductName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Price) VNĐ</td>
+                                                    <td><img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)" style="width:75px;height:75px"/></td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Quantity)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Discount)%</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Category.CategoryName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Color)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Size)</td>
+                                                <td>
+                                    @if (item.Active == false)
+                                    {
+                                                            <span class="badge bg-danger">Sắp Mở Bán</span>
+                                    }
+                                    else
+                                    {
+                                                            <span class="badge bg-success">Đang Bán</span>
+                                    }
+                                                </td>
+                                                    <td><i class="bi bi-star-fill" style="color:orange"></i>@Html.DisplayFor(modelitem=>item.StarRate)</td>
+                                                     <td>
+                                                             <input type="checkbox" value="@item.ProductId" class="cb" name="ProductIDList"/>
+                                                         </td>
+                                        </tr>
+                        }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @await Html.PartialAsync("~/JavascriptPartialView/DisableEnableButton.cshtml",new{
+        DeleteAllButton="SelectAll",CheckBoxClassName="cb"
+    })
+    @await Html.PartialAsync("~/JavascriptPartialView/CheckAllCheckBox.cshtml",new{
+        CheckAllButton="CheckAll",GetAllCheckBox="cb",DeleteButton="SelectAll"
+    })
+
+    @await Html.PartialAsync("~/AJAX/AddMultipleAJAX.cshtml",new{
+        AddButton="#SelectAll",AllCheckBoxClassName=".cb",GetID="#CollectionId",ControllerName="AdminFashionCollections",
+        ActionName="AddProductToCollection",VariableName="CollectionId"
+    })
+}

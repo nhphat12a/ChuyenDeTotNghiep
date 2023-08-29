@@ -1,0 +1,265 @@
+﻿@model IEnumerable<Aristino.ViewModel.CartVM>
+
+@{
+	ViewData["Title"] = "Cart";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	int i = 0;
+}
+			<!-- HEADING-BANNER START -->
+			<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/cart/Cart_Checkout_Header.jpg")');background-size:cover">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Giỏ Hàng Của Tôi</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a href="index.html">Trang Chủ</a></li>
+										<li>Giỏ Hàng</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- SHOPPING-CART-AREA START -->
+			<div class="shopping-cart-area  pt-80 pb-80">
+				<div class="container">	
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="shopping-cart">
+								<!-- Nav tabs -->
+								<ul class="cart-page-menu row clearfix mb-30">
+									<li class="active"><a href="#shopping-cart" data-toggle="tab">Giỏ Hàng</a></li>
+									<li><a asp-action="Wishlists">Danh Sách Yêu Thích</a></li>
+									<li><a asp-controller="CustomerOrders" asp-action="AllOrder">Hóa Đơn Của Tôi</a></li>
+								</ul>
+
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<!-- shopping-cart start -->
+									<div class="tab-pane active" id="shopping-cart">
+											<div class="shop-cart-table">
+												<div class="table-content table-responsive">
+													<table>
+														<thead>
+															<tr>
+																<th class="product-thumbnail">Sản Phẩm</th>
+																<th class="product-price">Giá</th>
+																<th class="product-quantity">Số Lượng</th>
+																<th class="product-subtotal">Tổng Tiền</th>
+																<th class="product-remove">Xóa</th>
+															</tr>
+														</thead>
+														<tbody>
+															@foreach(var item in Model)
+															{
+																i++;
+															 var newPrice=item.Product.Price*(Convert.ToDecimal(item.Product.Discount)/100);
+															<tr class="ParentWrap">
+																<td class="product-thumbnail  text-left">
+																	<!-- Single-product start -->
+																	<div class="single-product">
+																		<div class="product-img">
+																			<a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item.Product.ProductName+"/"+item.Product.ProductImage)" alt="" width="270" height="270" /></a>
+																		</div>
+																		<div class="product-info">
+																			<h4 class="post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:150px"><a class="text-light-black" asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId">@item.Product.ProductName</a></h4>
+																			<p class="mb-0">Màu :<input value="@item.Color" class="ProductColor" disabled style="border:none;background-color:white!important"/></p>
+																			<p class="mb-0">Size :<input value="@item.Size" class="ProductSize" disabled style="border:none;background-color:white"/> </p>
+																			<p class="mb-0"><span class="TimeCountDown"></span></p>
+																			<input type="hidden" value="@item.ProductId" class="ProductId">
+																			@if(item.Product.Discount!=0)
+																			{
+																				<input type="hidden" value="isSale" class="CheckSale"/>
+																			}
+																			else
+																			{
+																				<input type="hidden" value="" class="CheckSale"/>
+																			}
+																		</div>
+																	</div>
+																	<!-- Single-product end -->												
+																</td>
+																@if(item.Product.Discount!=0)
+																{
+																<td class="product-price"><input type="text" class="ProductPrice" value=@Convert.ToInt32(newPrice) disabled style="border:none;background-color:white;text-align:center" /></td>
+																}
+																else{
+																	if(item.Product.Discount==0 && Convert.ToBoolean(!item.Product.ProductDiscontinue) && item.Product.Quantity>0){
+																	<td class="product-price"><input type="text" class="ProductPrice" value=@item.Product.Price disabled style="border:none;background-color:white;text-align:center" /></td>
+																	}
+																	if(item.Product.Quantity<=0 && Convert.ToBoolean(!item.Product.ProductDiscontinue))
+																	{
+																		<td class="product-price"><input type="text" class="ProductPrice" value="Hết Hàng" disabled style="border:none;background-color:white;text-align:center" /></td>
+																	}
+																	if(Convert.ToBoolean(item.Product.ProductDiscontinue))
+																	{
+																		<td class="product-price"><input type="text" class="ProductPrice" value="Ngừng Kinh Doanh" disabled style="border:none;background-color:white;text-align:center" /></td>
+																	}
+																}
+																<td class="product-quantity">
+																	<div class="cart-plus-minus">
+																		<input type="text" value="@item.Quantity" name="qtybutton" class="cart-plus-minus-box">
+																	</div>
+																</td>
+																<td class="product-subtotal"><input type="text" class="ProductTotalPrice" value="@item.Product.Price"  disabled style="border:none;background-color:white;text-align:center"/></td>
+																<td class="product-remove">
+																	<form method="post" asp-action="RemoveItemFromCart" asp-route-id="@item.CartId" class="formDelete">
+																		<a href="#" class="cartDelete" ><i class="zmdi zmdi-close"></i></a>
+																	</form>
+																</td>
+															</tr>
+@*															@if(item.Product.Discount!=0)
+															{
+																var CountDownVariable="product"+i;
+															@await Html.PartialAsync("~/Views/Shared/JSPartialView/TimeCountDown.cshtml",new{
+																GetEndTime=item.Product.DiscountNavigation.EndSale,getShowTimeInput=".TimeCountDown",CreateVariable=CountDownVariable
+															})
+															}*@
+															}
+														</tbody>
+													</table>
+												</div>
+											</div>
+											<div class="row">
+@*												<div class="col-md-6 col-sm-6 col-xs-12">
+													<div class="customer-login mt-30">
+														<h4 class="title-1 title-border text-uppercase">coupon discount</h4>
+														<p class="text-gray">Enter your coupon code if you have one!</p>
+														<input type="text" placeholder="Enter your code here.">
+														<button type="submit" data-text="apply coupon" class="button-one submit-button mt-15">apply coupon</button>
+													</div>
+												</div>*@
+												<div class="col-12">
+													<div class="customer-login payment-details mt-30">
+														<h4 class="title-1 title-border text-uppercase">Chi Tiết Giỏ Hàng</h4>
+														<table>
+															<tbody>
+																<tr>
+																	<td class="text-left">Tổng Tiền</td>
+																	<td class="text-right"><input class="TotalPrice" value="" style="border:none;background-color:white;text-align:right" disabled/></td>
+																</tr>
+																<tr>
+																	<td class="text-left">Phương Thức Thanh Toán</td>
+																	<td class="text-right">
+																		@foreach(Payment payment in ViewBag.PaymentMethod)
+																		{
+																			<input type="radio" class="paymentMethod" name="Payment" value="@payment.PaymentId"/>
+																			<label for="paymentMethod">@payment.PaymentName</label>
+																		}
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<button class="button-one submit-button mt-15" data-text="order" id="OrderButton">Thanh Toán</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+									</div>
+									<!-- shopping-cart end -->
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- SHOPPING-CART-AREA END -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+	$(document).ready(function(){
+	var createToken='@Html.AntiForgeryToken()';
+	var token=$(createToken).val();
+	$("#OrderButton").on("click",function(){
+		var getColor=$(".ProductColor");
+		var getSize=$(".ProductSize");
+		var getProductId=$(".ProductId");
+		var formdata=new FormData();
+		var getPayment=$(".paymentMethod");
+		var getQuantity=$(".cart-plus-minus-box");
+		for(let i=0;i<getProductId.length;i++){
+			formdata.append("ProductIdList",parseInt( $(getProductId[i]).val() ));
+			formdata.append("ColorList",$(getColor[i]).val());
+			formdata.append("SizeList",$(getSize[i]).val());
+			formdata.append("QuantityList",parseInt($(getQuantity[i]).val()));
+		}
+		for(let i=0;i<getPayment.length;i++)
+		{
+			if($(getPayment[i]).is(":checked"))
+				formdata.append("PaymentId",parseInt($(getPayment[i]).val()))
+		}
+		$.ajax({
+			type:"POST",
+			url: "/AristinoAdmin/AdminOrders/CreateOrder",
+			headers:{
+					'RequestVerificationToken':token
+			},
+			data:formdata,
+			processData: false,
+			contentType: false,
+			success:function(response){
+				if(response.isSuccess==="Failed")
+				{
+					var Error=response.message;
+					Swal.fire({
+						icon: "error",
+						title: Error,
+						confirmButtonText:'Got it'
+						}).then((result)=>{
+							if(result.isConfirmed){
+								location.reload();
+							}
+						})
+				}
+				else
+				{
+					var Success=response.message;
+					Swal.fire({
+						icon: "success",
+						title: Success,
+						confirmButtonText:'Got it'
+						}).then((result)=>{
+							if(result.isConfirmed){
+								location.reload();
+							}
+						})
+				}
+			}
+		});
+	})
+})
+</script>
+@section Scripts{
+	@await Html.PartialAsync("./JSPartialView/QuantityButton.cshtml", new{TotalQuantity=3})
+	<script>
+		$(document).ready(function(e){
+			var getForm=document.getElementsByClassName("formDelete");
+			var getAnchor=document.getElementsByClassName("cartDelete");
+			for(let i=0;i<getAnchor.length;i++){
+				getAnchor[i].addEventListener("click",function(e){
+					e.preventDefault;
+					getForm[i].submit();
+				})
+			}
+		});
+	</script>
+	@if (TempData["Success"] != null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+		@TempData.Remove("Success");
+	}
+	@await Html.PartialAsync("~/Views/Shared/JSPartialView/TimeCountDown.cshtml",new{
+		GetEndTime=ViewBag.EndSaleList,getShowTimeInput="TimeCountDown"})
+
+}

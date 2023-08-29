@@ -1,0 +1,147 @@
+﻿@model IEnumerable<Aristino.ViewModel.ProductVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+			<!-- HEADING-BANNER START -->
+			@foreach(FashionCollection fashion in ViewBag.CollectionDetail)
+			{
+	<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/uploads/AdminFashionCollections/"+fashion.CollectionName+"/"+fashion.CollectionThumbnail)');background-size:cover;background-repeat:no-repeat">
+		<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>@fashion.CollectionName</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+										<li>@fashion.CollectionName</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- ABOUT-US-AREA START -->
+			<div class="about-us-area  pt-80 pb-80">
+				<div class="container">	
+					<div class="about-us bg-white">
+						<div class="row">
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								<div class="about-photo">
+									<img src="@Url.Content("~/uploads/AdminFashionCollections/"+fashion.CollectionName+"/"+fashion.CollectionThumbnail)" alt="" style="height:400px" />
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+								<div class="about-brief bg-dark-white">
+									<h4 class="title-1 title-border text-uppercase mb-30">@fashion.CollectionName</h4>
+									<p>@Html.Raw(fashion.CollectionDes)</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			}
+			<!-- ABOUT-US-AREA END -->
+			<div class="product-area pt-80 pb-80 product-style-2">
+				<div class="container">
+					<!-- Section-title start -->
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="section-title text-center">
+								<h2 class="title-border">Sản Phẩm Của Bộ Sưu Tập</h2>
+							</div>
+						</div>
+					</div>
+					<!-- Section-title end -->
+					<!-- Shop-Content End -->
+					<div class="shop-content">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<!-- Single-product start -->
+						@foreach (var item in Model)
+						{
+							<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+								<div class="single-product">
+									<div class="product-img">
+										<span class="pro-label new-label">new</span>
+										@if (item.Discount != 0)
+										{
+											var newPrice = item.Price - (item.Price * (Convert.ToDecimal(item.Discount) / 100));
+											<span class="pro-price-2">@Convert.ToInt32(newPrice) VNĐ</span>
+										}
+										else
+										{
+											<span class="pro-price-2">@Html.DisplayFor(modelitem=>item.Price) VNĐ</span>
+										}
+										<a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)" alt="" style="width:270px!important;height:270px !important" /></a>
+												</div>
+												<div class="product-info clearfix text-center">
+													<div class="fix">
+														<h4 class="post-title"><a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId">@Html.DisplayFor(modelitem=>item.ProductName)</a></h4>
+													</div>
+													<div class="fix">
+														<span class="pro-rating">
+												@switch (item.StarRate[0])
+												{
+													case '0':
+																<p>Sản Phẩm Chưa Đánh Giá</p>
+														break;
+													case '1':
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+														break;
+													case '2':
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+														break;
+													case '3':
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+														break;
+													case '4':
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star-outline"></i></a>
+														break;
+													case '5':
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+																<a><i class="zmdi zmdi-star"></i></a>
+														break;
+													default:
+														break;
+												}
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- Single-product end -->
+						}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>

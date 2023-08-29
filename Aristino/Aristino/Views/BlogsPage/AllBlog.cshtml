@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Aristino.ViewModel.BlogVM>
+
+@{
+	ViewData["Title"] = "AllBlog";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var CommentCount = 0;
+}
+			<!-- HEADING-BANNER START -->
+			<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/DefaultBlogWall/banner_blog.jpg")')">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Blog</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+										<li>Blog</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- BLGO-AREA START -->
+			<div class="blog-area blog-2  pt-80 pb-80">
+				<div class="container">	
+					<div class="blog">
+						<div class="row">
+							@foreach(var item in Model)
+							{
+							DateTime date=DateTime.Parse(item.PostDate);
+							string MonthName=System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month);
+							<!-- Single-blog start -->
+							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+								<div class="single-blog mb-30">
+									<div class="blog-photo">
+										<a asp-controller="BlogDetail" asp-action="Index" asp-route-id="@item.BlogId"><img src="@Url.Content("~/uploads/AdminBlogs/"+item.BlogTitle+"/"+item.Thumbnail)" alt="" style="width:320px;height:200px" /></a>
+										<div class="like-share text-center fix">
+											<a href="#"><i class="zmdi zmdi-favorite"></i><span>@item.BlogLike</span></a>
+											@foreach(var count in item.BlogComments)
+											{
+												if(item.BlogId!=0)
+													CommentCount++;
+											}
+											<a href="#"><i class="zmdi zmdi-comments"></i><span>@CommentCount</span></a>
+											<a href="#"><i class="zmdi zmdi-eye"></i><span>@item.BlogViews</span></a>
+										</div>
+									</div>
+									<div class="blog-info"> 
+										<div class="post-meta fix">
+											<div class="post-date floatleft"><span class="text-dark-red">@date.Day</span></div>
+											<div class="post-year floatleft">
+												<p class="text-uppercase text-dark-red mb-0">@MonthName, @date.Year</p>
+												<h4 class="post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:190px"><a asp-controller="BlogDetail" asp-action="Index" asp-route-id="@item.BlogId" tabindex="0">@Html.DisplayFor(modelitem=>item.BlogTitle)</a></h4>
+											</div>
+										</div>
+										<p>@item.BlogTitle</p>
+										<a asp-controller="BlogDetail" asp-action="Index" asp-route-id="@item.BlogId" class="button-2 text-dark-red">Đọc...</a>
+									</div>
+								</div>
+							</div>
+							<!-- Single-blog end -->
+							}
+						</div>	
+					</div>
+				</div>
+			</div>
+			<!-- BLGO-AREA END -->	

@@ -1,0 +1,192 @@
+﻿@model IEnumerable<Aristino.ViewModel.WishlistVM>
+
+@{
+    ViewData["Title"] = "Wishlists";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+			<!-- HEADING-BANNER START -->
+			<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/cart/wishlist.jfif")');background-repeat:no-repeat;background-size:cover">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Danh Sách Yêu Thích Của Tôi</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a href="index.html">Trang Chủ</a></li>
+										<li>Danh Sách Yêu Thích</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- SHOPPING-CART-AREA START -->
+			<div class="shopping-cart-area  pt-80 pb-80">
+				<div class="container">	
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="shopping-cart">
+								<!-- Nav tabs -->
+								<ul class="cart-page-menu row clearfix mb-30">
+									<li><a asp-action="Cart">Giỏ Hàng</a></li>
+									<li class="active"><a asp-action="Wishlists">Danh Sách Yêu Thích</a></li>
+									<li><a asp-controller="CustomerOrders" asp-action="AllOrder">Hóa Đơn Của Tôi</a></li>
+								</ul>
+									<!-- wishlist start -->
+									<div class="tab-pane" id="wishlist">
+											<div class="shop-cart-table">
+												<div class="table-content table-responsive">
+													<table>
+														<thead>
+															<tr>
+																<th class="product-thumbnail">Sản Phẩm</th>
+																<th class="product-price">Giá</th>
+																<th class="product-stock">Hàng Trong Kho</th>
+																<th class="product-add-cart">Thêm Vào Giỏ Hàng</th>
+																<th class="product-remove">Xóa</th>
+															</tr>
+														</thead>
+														<tbody>
+															@foreach(var item in Model)
+															{
+															<tr class="WishlistParent">
+																<td class="product-thumbnail  text-left">
+																	<!-- Single-product start -->
+																	<div class="single-product">
+																		<div class="product-img">
+																			<a asp-controller="ProductDetial" asp-action="Index" asp-route-id="@item.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item.Product.ProductName+"/"+item.Product.ProductImage)" alt="" width="270" height="270" /></a>
+																		</div>
+																		<div class="product-info">
+																			<h4 class="post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:150px"><a class="text-light-black" asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId">@Html.DisplayFor(modelitem=>item.Product.ProductName)</a></h4>
+																			<p class="mb-0">Màu :<span class="ProductColor">@item.Color</span></p>
+																			<p class="mb-0">Size : <span class="ProductSize">@item.Size</span></p>
+																			<input type="hidden" value="@item.ProductId" class="ProductId"/>
+																			<input type="hidden" value="@item.Quantity" class="Quantity"/>
+																		</div>
+																	</div>
+																	<!-- Single-product end -->				
+																</td>
+																<td class="product-price">@Html.DisplayFor(modelitem=>item.Product.Price)</td>
+																@if(item.Product.Quantity>0)
+																{
+																<td class="product-stock">@item.Product.Quantity</td>
+																}
+																else
+																{
+																	<td class="product-stock">Hết Hàng</td>
+																}
+																<td class="product-add-cart">
+																<form method="post" asp-action="AddCart" asp-route-getProductId="@item.ProductId" class="formAddCart">
+																	<a class="text-light-black addCart"><i class="zmdi zmdi-shopping-cart-plus"></i></a>
+																</form>
+																</td>
+																<td class="product-remove">
+																	<form method="post" asp-action="RemoveItemWishList" asp-route-id="@item.WishlistId" class="formDelete">
+																	<a href="#" class="deleteWishlist"><i class="zmdi zmdi-close"></i></a>
+																	</form>
+																</td>
+															</tr>
+															}
+														</tbody>
+													</table>
+												</div>
+											</div>								
+									</div>
+									<!-- wishlist end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script>
+		$(document).ready(function(){
+		var createToken='@Html.AntiForgeryToken()';
+		var token=$(createToken).val();
+
+		$(".addCart").on("click",function(e){
+			e.preventDefault;
+			var getParent=$(this).closest(".WishlistParent");
+			var getProductId=getParent.find(".ProductId").val();
+			var ColorName=getParent.find(".ProductColor").text();
+			var SizeName=getParent.find(".ProductSize").text();
+			var Quantity=parseInt(getParent.find(".Quantity").val());
+			var formdata=new FormData();
+			formdata.append("getProductId",getProductId);
+			formdata.append("ColorName",ColorName);
+			formdata.append("SizeName",SizeName);
+			formdata.append("getQuantity",Quantity);
+			$.ajax({
+				type:"POST",
+				url: '@Url.Action("AddCart","UserCartArea")',
+				headers:{
+					'RequestVerificationToken':token
+				},
+				data:formdata,
+				processData: false,
+				contentType: false,
+				success: function(response){
+						if(response.isSuccess==="Failed"){
+						var Error=response.message;
+						Swal.fire({
+							icon: "error",
+							title: Error,
+							confirmButtonText:'Got it'
+						}).then((result)=>{
+							if(result.isConfirmed){
+								location.reload();
+							}
+						})
+					}
+					else{
+						var Success=response.message;
+						Swal.fire({
+							icon: "success",
+							title: Success,
+							confirmButtonText:'Got it'
+						}).then((result)=>{
+							if(result.isConfirmed){
+								location.reload();
+							}
+						})
+					}
+
+				}
+			});
+		})
+		})
+	</script>
+@section Scripts{
+	<script>
+		var getFormDelete=document.getElementsByClassName("formDelete");
+		var getAnchorWishlist=document.getElementsByClassName("deleteWishlist");
+		for(let i=0;i<getAnchorWishlist.length;i++){
+			getAnchorWishlist[i].addEventListener("click",function(e){
+				e.preventDefault;
+				getFormDelete[i].submit();
+			})
+		}
+	</script>
+@*	<script>
+		var getFormAddCart=document.getElementsByClassName("formAddCart");
+		var getAnchor=document.getElementsByClassName("addCart");
+		for(let i=0;i<getAnchor.length;i++){
+			getAnchor[i].addEventListener("click",function(e){
+				e.preventDefault;
+				getFormAddCart[i].submit();
+			})
+		}
+	</script>*@
+	@if (TempData["Success"] != null)
+	{
+		@await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+		@TempData.Remove("Success")
+	}
+}

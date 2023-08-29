@@ -1,0 +1,11 @@
+﻿@model dynamic
+@{
+    var UserRating = Model.UserRating;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script>
+    $(document).ready(function(){
+        var GetRatingInput=$(".star-value");
+        GetRatingInput.width(@UserRating+"%");
+    })
+</script>

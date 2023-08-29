@@ -1,0 +1,14 @@
+﻿@model dynamic
+@{
+    string Error = Model.Error;
+}
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+       window.onload=function(){
+                Swal.fire({
+                    icon: "error",
+                    title: "@Error"
+            })
+        }
+</script>

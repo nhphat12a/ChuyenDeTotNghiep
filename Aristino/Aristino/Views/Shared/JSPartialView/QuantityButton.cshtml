@@ -1,0 +1,50 @@
+﻿@model dynamic
+@{
+	int TotalQuantity = Model.TotalQuantity;
+}
+<script>
+		var getParent=$(".ParentWrap");
+		var getAllProductsPrice = 0;
+		var Total=0;
+		var AllProductsTotalPrice = $(".shopping-cart-area").find(".TotalPrice");
+		getParent.each(function(){
+			var ProductQuantity = parseFloat($(this).find(".cart-plus-minus-box").val());
+			var ProductPrice = parseFloat($(this).find(".ProductPrice").val());
+			getAllProductsPrice = ProductQuantity * ProductPrice;
+			$(this).find(".ProductTotalPrice").val(getAllProductsPrice);
+			Total+=getAllProductsPrice;
+		})
+		AllProductsTotalPrice.val(Total);
+		var getAllProductsTotalPrice = parseFloat(AllProductsTotalPrice.val());
+		$(".cart-plus-minus").prepend('<div class="dec qtybutton">-</div>');
+		$(".cart-plus-minus").append('<div class="inc qtybutton">+</div>');
+		$(".qtybutton").on("click", function () {
+				var parent=$(this).closest(".ParentWrap");
+				var getPrice=parent.find(".ProductPrice").val();
+				var ProductTotalPriceInput=parent.find(".ProductTotalPrice");
+				var $button = $(this);
+				var oldValue = $button.parent().find("input").val();
+				var convert=parseFloat(getPrice);
+				if ($button.text() == "+") {
+					var newVal = parseFloat(oldValue) + 1;
+					convert=convert*newVal;
+					getAllProductsTotalPrice += parseFloat(getPrice)
+					ProductTotalPriceInput.val(convert);
+					AllProductsTotalPrice.val(getAllProductsTotalPrice);
+				}
+				else {
+					// Don't allow decrementing below zero
+					if (oldValue > 0) {
+						var newVal = parseFloat(oldValue) - 1;
+						convert=convert*newVal;
+						ProductTotalPriceInput.val(convert);
+						getAllProductsTotalPrice -= parseFloat(getPrice);
+						AllProductsTotalPrice.val(getAllProductsTotalPrice);
+					}
+					else {
+						newVal = 0;
+					}
+				}
+				$button.parent().find("input").val(newVal);
+			});
+</script>

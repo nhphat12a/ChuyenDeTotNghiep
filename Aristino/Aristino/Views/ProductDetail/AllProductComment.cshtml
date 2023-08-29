@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Aristino.ViewModel.CommentVM>
+
+@{
+    ViewData["Title"] = "AllProductComment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+			<!-- HEADING-BANNER START -->
+			<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/CommentWal/Comment.png")')">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Comments</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-controller="Home" asp-action="Index">Home</a></li>
+										<li>Comments</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- HEADING-BANNER END -->
+			<!-- COMMENT-AREA START -->
+			<div class="blog-area blog-2 blog-details-area  pt-80 pb-80">
+				<div class="container">	
+					<div class="blog">
+						<div class="row">
+							<!-- Single-Comment start -->
+							<div class="col-lg-12">
+								<div class="single-blog mb-30">
+									@foreach(Product product in ViewBag.ProductImage)
+									{
+									<div class="blog-photo" style="display:flex;justify-content:center;align-items:center">
+										<a href="#"><img src="@Url.Content("~/uploads/AdminProducts/"+product.ProductName+"/"+product.ProductImage)" alt="" style="width:400px;height:450px" /></a>
+									</div>
+									}
+									<div class="blog-info blog-details-info">
+										<div class="pro-reviews mt-60">
+											<div class="customer-review mb-60">
+												<h3 class="tab-title title-border mb-30">Customer comments (Total Comment:@ViewBag.CommentCount)</h3>
+												<ul >
+													@foreach(var item in Model)
+													{
+													<li class="mb-30">
+														<div class="pro-reviewer">
+															<img src="@Url.Content("~/uploads/Customers/"+item.Customer.Email+"/"+item.Customer.Avatar)" alt="" style="width:90px;height:100px" />
+														</div>
+														<div class="pro-reviewer-comment">
+															<div class="fix">
+																<div class="floatleft mbl-center">
+																	<h5 class="text-uppercase mb-0"><strong>@item.Customer.FirstName @item.Customer.LastName</strong></h5>
+																	<p class="reply-date">@item.CommentedDate</p>
+																</div>
+															</div>
+															<p class="mb-0">@item.Title</p>
+															<p class="mb-0">@item.CommentContent</p>
+													@switch (item.StarRating)
+													{
+														case 20:
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															break;
+														case 40:
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															break;
+														case 60:
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															break;
+														case 80:
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															break;
+														case 100:
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															<a><i class="zmdi zmdi-star"style="color:orange"></i></a>
+															break;
+														default:
+															break;
+													}
+												</div>
+													</li>
+													}
+												</ul>
+											</div>
+										</div>										
+									</div>
+								</div>
+							</div>
+							<!-- Single-blog end -->
+						</div>
+					</div>
+				</div>
+			</div>
+

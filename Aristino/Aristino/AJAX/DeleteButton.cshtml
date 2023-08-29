@@ -1,0 +1,63 @@
+﻿@model dynamic
+@{
+    var DeleteButton = Model.DeleteButton;
+    var ItemId = Model.ItemId;
+    string ActionName = Model.ActionName;
+    string ControllerName = Model.ControllerName;
+    string WarningMessage = Model.WarningMessage;
+    string ParentDiv = Model.ParentDiv;
+    string FormDataAppend = Model.FormDataAppend;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function(e){
+        var getToken='@Html.AntiForgeryToken()';
+        var token=$(getToken).val();
+        $("@DeleteButton").on("click",function(e){
+            e.preventDefault;
+            var getParent=$(this).closest("@ParentDiv");
+            var getItemId=getParent.find("@ItemId").val();
+            var formdata=new FormData();
+            formdata.append("@FormDataAppend",parseInt(getItemId));
+             Swal.fire({
+                   title: '@WarningMessage',
+                   icon: 'warning',
+                   showCancelButton: true,
+                   confirmButtonText: 'Yes',
+                   cancelButtonText: 'No',
+                   focusConfirm: false,
+                    }).then((result)=>{
+                        if(result.isConfirmed){
+                            $.ajax({
+                                type: 'POST',
+                                url:'/AristinoAdmin/@ControllerName/@ActionName',
+                                headers:{
+                                    'RequestVerificationToken':token
+                                },
+                                data:formdata,
+                                processData: false,
+                                contentType: false,
+                                success:function(response){
+                                    var Success=response.message;
+                                     Swal.fire({
+                                          title: '<strong>Success</strong>',
+                                          icon: 'success',
+                                          html:Success,
+                                          showCloseButton: true,
+                                          focusConfirm: false,
+                                          confirmButtonText:'Ok'
+                                    }).then((result)=>{
+                                        if(result.isConfirmed){
+                                            location.reload();
+                                        }
+                                    })
+                                 }
+                             })
+
+                        }
+                    })
+        })
+    })
+</script>

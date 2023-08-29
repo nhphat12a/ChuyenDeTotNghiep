@@ -1,0 +1,55 @@
+﻿@model dynamic
+@{
+    var CreateButtonID = Model.CreateButtonID;
+    string ActionName=Model.ActionName;
+    string ControllerName = Model.ControllerName;
+
+}
+<link rel="stylesheet" href="~/assets/vendors/sweetalert2/sweetalert2.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script>
+$(document).ready(function(e){
+    var createButton=document.querySelector("@CreateButtonID");
+    var formdata=new FormData();
+    createButton.addEventListener('click',function(e){
+            Swal.fire({
+              title: 'Enter Role Name',
+              input: 'text',
+              inputAttributes: {
+                autocapitalize: 'off'
+              },
+              showCancelButton: true,
+              confirmButtonText: 'Look up',
+            }).then((result) => {
+              if (result.isConfirmed) {                    
+                 formdata.append('RoleName',result.value)
+                 $.ajax({
+                     url: '@Url.Action(ActionName,ControllerName)',
+                     type:"POST",
+                     data:formdata,
+
+                     processData: false,
+                     contentType: false,
+                      success: function(response){
+                        window.location.href=response.redirectToUrl;
+                    }
+                 });
+
+              }
+            });
+
+    });
+    //function sendValue(inputValue){
+    //     $.ajax({
+    //     url: '@Url.Action(ActionName,ControllerName)',
+    //     type:"POST",
+    //     data:{"RoleName":inputValue},
+
+    //     processData: false,
+    //     contentType: false,
+    //    });
+    //}
+});
+
+</script>

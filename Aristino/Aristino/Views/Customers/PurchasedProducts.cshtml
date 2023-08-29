@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Aristino.ViewModel.OrderDetailVM>
+
+@{
+	ViewData["Title"] = "PurchasedProducts";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var i = 0;
+}
+<div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/PurchasedWal/purchased.jpg")');background-repeat:no-repeat;background-size:100%">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="heading-banner">
+								<div class="heading-banner-title">
+									<h2>Sản Phẩm Đã Mua</h2>
+								</div>
+								<div class="breadcumbs pb-15">
+									<ul>
+										<li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+										<li>Sản Phẩm Đã Mua</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="shopping-cart-area  pt-80 pb-80">
+				<div class="container">	
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="shopping-cart">
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<!-- shopping-cart start -->
+									<div class="tab-pane active" id="shopping-cart">
+											<div class="shop-cart-table">
+												<div class="table-content table-responsive">
+													<table>
+														<thead>
+															<tr>
+																<th class="product-thumbnail">Sản Phẩm</th>
+																<th class="product-price">Giá Tiền</th>
+																<th class="product-quantity">Số Lượng</th>
+																<th class="product-quantity">Màu Sắc</th>
+																<th class="product-quantity">Size</th>
+															</tr>
+														</thead>
+														<tbody>
+															@foreach(var item in Model)
+															{
+																i++;
+															 var newPrice=item.Product.Price*(Convert.ToDecimal(item.Product.Discount)/100);
+															<tr class="ParentWrap">
+																<td class="product-thumbnail  text-left">
+																	<!-- Single-product start -->
+																	<div class="single-product">
+																		<div class="product-img">
+																			<a asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId"><img src="@Url.Content("~/uploads/AdminProducts/"+item.Product.ProductName+"/"+item.Product.ProductImage)" alt="" width="270" height="270" /></a>
+																		</div>
+																		<div class="product-info">
+																			<h4 class="post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:150px"><a class="text-light-black" asp-controller="ProductDetail" asp-action="Index" asp-route-id="@item.ProductId">@item.Product.ProductName</a></h4>
+																			<input type="hidden" value="@item.ProductId" class="ProductId">
+																		</div>
+																	</div>
+																	<!-- Single-product end -->												
+																</td>
+																<td class="product-price"><input type="text" class="ProductPrice" value=@item.Product.Price disabled style="border:none;background-color:white;text-align:center" /></td>
+																<td class="product-quantity">
+																	<span>@Html.DisplayFor(modelitem=>item.Quantity)</span>
+																</td>
+																<td class="product-subtotal"><input type="text" value="@item.Color" disabled style="border:none; background-color:white;text-align:center" /></td>
+																<td class="product-subtotal"><input value="@item.Size" disabled style="border:none;background-color:white;text-align:center"/></td>
+															</tr>
+															}
+														</tbody>
+													</table>
+												</div>
+											</div>
+									</div>
+									<!-- shopping-cart end -->
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Aristino.ViewModel.BlogVM>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+<h1>Quản Lý Blogs</h1>
+<p>
+    <a asp-action="Create">Viết Blog</a>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <button id="DeleteAll" class="badge bg-danger" disabled>Xóa Những Mục Đã Chọn</button>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Chọn Tất Cả <input type="checkbox" id="CheckAll" /></th>
+                                        <th>No.</th>
+                                        <th>Tiêu Đề Blog</th>
+                                        <th>Tác Giả</th>
+                                        <th>Ngày Đăng</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                                @foreach (var item in Model)
+                                                {
+                                                    i++;
+                                                <tr>
+                                                    <th><input type="checkbox" value="@item.BlogId" class="cb" /></th>
+                                                    <td>@i</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.BlogTitle)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Customer.FirstName) @Html.DisplayFor(modelitem=>item.Customer.LastName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.PostDate)</td>
+                                                <td>
+                                                    <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.BlogId" style="margin-bottom:15px">Sửa</a>
+                                                    <form asp-area="AristinoAdmin" asp-action="Delete" asp-route-id="@item.BlogId"  method="post" class="ConfirmDelete">
+                                                         <button class="badge bg-danger DeleteButton" onclick="return confirmDelete(this)">Xóa</button>
+                                                    </form>
+                                                </td>
+                                        </tr>
+                                                 }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+    @if (TempData["Success"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @await Html.PartialAsync("~/AJAX/DeleteMultipleAJAX.cshtml",new{CheckBoxClassName=".cb",DeleteButton="#DeleteAll",ControllerName="AdminBlogs",ActionName="",getID="",VariableName=""})
+    @await Html.PartialAsync("~/JavascriptPartialView/DisableEnableButton.cshtml",new{DeleteAllButton="DeleteAll",CheckBoxClassName="cb"})
+    @await Html.PartialAsync("~/JavascriptPartialView/CheckAllCheckBox.cshtml",new{CheckAllButton="CheckAll",GetAllCheckBox="cb",DeleteButton="DeleteAll"})
+}

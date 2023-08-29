@@ -1,0 +1,128 @@
+﻿@model IEnumerable<Aristino.ViewModel.ProductVM>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.GetProductID = TempData["ProductID"];
+    int i = 0;
+}
+
+<h1>Quản Lý Sản Phẩm</h1>
+<p>
+    <a asp-action="Create">Thêm Sản Phẩm</a>
+</p>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                           <div class="ButtonArea" style="display:flex;justify-content:space-between;">
+                               <form method="post" asp-action="UpdateRatingStar">
+                               <button type="submit" class="badge bg-success">Cập Nhật Lại Đánh Giá Sản Phẩm</button>
+                                </form>
+                              <button  id="Delete" class="badge bg-danger"  disabled>Xóa Những Mục Đã Chọn</button>
+                           </div>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Chọn Tất Cả <input type="checkbox" id="CheckAll" /> </th>
+                                        <th>No.</th>
+                                        <th>Tên Sản Phẩm</th>
+                                        <th>Giá (VNĐ)</th>
+                                        <th>Hình Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Giảm Giá </th>
+                                        <th>Danh Mục</th>
+                                        <th>Màu Sắc</th>
+                                        <th>Kích Cỡ</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Kinh Doanh</th>
+                                        <th>Đánh Giá</th>
+                                        <th>Bộ Sưu Tập</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach(var item in Model)
+                                        {
+                                            i++;
+                                    <tr>
+                                                <td>
+                                                    <input type="checkbox" value="@item.ProductId" class="cb" name="ProductIDList"/>
+                                                </td>
+                                                <td>@i</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.ProductName)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Price) VNĐ</td>
+                                                <td><img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)" style="width:75px;height:75px"/></td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Quantity)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Discount)%</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Category.CategoryName)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Color)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Size)</td>
+                                            <td>
+                                                @if(item.Active==false)
+                                                {
+                                                    <span class="badge bg-danger">Sắp Mở Bán</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">Đang Bán</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if(item.ProductDiscontinue)
+                                                {
+                                                    <span class="badge bg-danger">Ngừng Kinh Doanh</span>
+                                                }
+                                                else{
+                                                    <span class="badge bg-success">Đang Kinh Doanh</span>
+                                                }
+                                            </td>
+                                                <td><i class="bi bi-star-fill" style="color:orange"></i>@Html.DisplayFor(modelitem=>item.StarRate)</td>
+                                                <td>
+                                                    @if(item.CollectionId!=null){
+                                                        @Html.DisplayFor(modelitem=>item.Collection.CollectionName);
+                                                    }
+                                                    else{
+                                                        <span>Không Có</span>
+                                                    }
+                                                </td>
+                                            <td>
+                                                <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.ProductId">Sửa</a>
+                                                @if(User.HasClaim("Role","Admins"))
+                                                {
+                                                <form asp-area="AristinoAdmin" asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId"  method="post" class="ConfirmDelete">
+                                                     <button class="badge bg-danger DeleteButton" onclick="return confirmDelete(this)" style="margin-top:10px">Xóa</button>
+                                                </form>
+                                                }
+                                            </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+
+@section Scripts{
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml", new{Success=TempData["Success"]})
+        @TempData.Remove("Success");
+    }
+    @if(TempData["Error"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+    @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+ @*   @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="DeleteMultiple"})*@
+    @await Html.PartialAsync("~/JavascriptPartialView/DisableEnableButton.cshtml",new{DeleteAllButton="Delete",CheckBoxClassName="cb"}) 
+    @await Html.PartialAsync("~/AJAX/DeleteMultipleAJAX.cshtml",new{CheckBoxClassName=".cb",DeleteButton="#Delete",ControllerName="AdminProducts",ActionName="DeleteMultipleProducts",getID="",VariableName=""})
+    @await Html.PartialAsync("~/JavascriptPartialView/CheckAllCheckBox.cshtml",new{CheckAllButton="CheckAll",GetAllCheckBox="cb",DeleteButton="Delete"})
+}

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Aristino.ViewModel.CustomerVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    int i = 0;
+}
+<h1>Quản Lý Khách Hàng</h1>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Họ</th>
+                                        <th>Tên</th>
+                                        <th>Ngày Sinh</th>
+                                        <th>Giới Tinh</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Số Điện Thoại</th>
+                                        <th>Email</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Quốc Tịch</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                                        <tr>
+                                                     <td>@i</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.FirstName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.LastName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Dob)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Gender.GenderName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.CustomerAddress)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.PhoneNumber)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Email)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Status.StatusName)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.Country)</td>
+                                                    <td>@Html.DisplayFor(modelitem=>item.CreatedDate)</td>
+                                                <td>
+                                                    <a asp-action="Edit" class="badge bg-warning" asp-route-id="@item.CustomersId" style="margin-bottom:15px">Sửa</a>
+                                    @if (User.HasClaim("Role", "Admins"))
+                                    {
+                                                        <form asp-area="AristinoAdmin" asp-controller="AdminCustomers" asp-action="Delete" asp-route-id="@item.CustomersId"  method="post" class="ConfirmDelete">
+                                                             <button class="badge bg-danger DeleteButton" onclick="return confirmDelete(this)">Xóa</button>
+                                                        </form>
+                                    }
+                                                </td>
+                                        </tr>
+                        }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @if(TempData["Success"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @if (TempData["Error"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+    @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlertDelete.cshtml",new{FormClassName="ConfirmDelete"})
+}

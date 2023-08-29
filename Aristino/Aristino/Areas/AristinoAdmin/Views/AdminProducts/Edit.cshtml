@@ -1,0 +1,189 @@
+﻿@model Aristino.ViewModel.ProductVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ErrorList = TempData["ErrorList"];
+}
+
+<h1>Chỉnh Sửa</h1>
+
+<h4>Sản Phẩm</h4>
+<hr />
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Edit" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <input type="hidden" asp-for="ProductId"/>
+                                                    <input type="hidden" asp-for="StarRate"/>
+                                                    <div class="col-md-4">
+                                                        <label>Tên Sản Phẩm</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="ProductName" placeholder="Product Name">
+                                                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Giá</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number"  class="form-control"
+                                                            asp-for="Price" placeholder="Price">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Danh Mục</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="CategoryId" asp-items="@ViewBag.CategoryId">
+                                                            <option value="" disabled selected></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Mô Tả Ngắn</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <textarea class="form-control" asp-for="ShortDes"></textarea>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Mô Tả</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <textarea class="form-control" asp-for="ProductDescription"></textarea>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Hình Sản Phẩm</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                         <div class="card">
+                                                            <div class="card-content">
+                                                                <div class="card-body">
+                                                                    <!-- File uploader with image preview -->
+                                                                    <input type="file" class="image-preview-filepond">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Kích Cỡ</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                       <select class="choices form-select multiple-remove form-control"
+                                                                multiple="multiple" asp-for="SizeList" asp-items="@ViewBag.SizeId">
+                                                                @foreach(var item in ViewBag.SizeList)
+                                                                {
+                                                                    <option value="@item" selected></option>
+                                                                }
+                                                            </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Màu Sắc</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="choices form-select multiple-remove form-control"
+                                                                multiple="multiple" asp-for="ColorList" asp-items="@ViewBag.ColorId">
+                                                                @foreach(var item in ViewBag.ColorList)
+                                                                {
+                                                                    <option value="@item" selected></option>
+                                                                }
+                                                            </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Số Lượng</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number" class="form-control"
+                                                            asp-for="Quantity" placeholder="Quantity">
+                                                    </div>
+                                                      <div class="col-md-4">
+                                                        <label>Banner Giảm Giá</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="choices form-select multiple-remove form-control"
+                                                                multiple="multiple" asp-for="DiscountId" asp-items="@ViewBag.DiscountBanner">
+                                                                @if(ViewBag.DiscountId !=null)
+                                                                {
+                                                                   <option value="@ViewBag.DiscountId" selected>@ViewBag.DiscountDescription</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option></option>
+                                                                }
+                                                            </select>
+                                                    </div>
+                                                    @if (ViewBag.CheckDiscontinue !=true)
+                                                    {
+                                                    <div class="col-md-4">
+                                                        <label>Trạng Thái Sản Phẩm</label>
+                                                    </div>
+                                                    <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                        <div class='form-check'>
+                                                            <div class="checkbox">
+                                                                <input type="radio" class="btn-check" name="ActiveButton" id="success-outlined"
+                                                                        autocomplete="off" asp-for="Active" value="true">
+                                                                    <label class="btn btn-outline-success" for="success-outlined">Đang Bán</label>
+
+                                                                <input type="radio" class="btn-check" name="ActiveButton" id="danger-outlined"
+                                                                    autocomplete="off" asp-for="Active" value="false">
+                                                                <label class="btn btn-outline-danger" for="danger-outlined">Chuẩn Bị Bán</label>
+                                                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    }
+                                                    <div class="col-md-4">
+                                                        <label>Kinh Doanh</label>
+                                                    </div>
+                                                     <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                         <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" asp-for="ProductDiscontinue">
+                                                            <label class="form-check-label" for="flexSwitchCheckDefault">Ngừng Kinh Doanh</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Tạo</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+    <script src="~/assets/vendors/choices.js/choices.min.js"></script>
+@section Scripts{
+    @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/FilePond/_UploadImage.cshtml",
+    new{InputClass=".image-preview-filepond",FormId="#formupload",ActionName="Edit",ControllerName="AdminProducts",ImageGallery=ViewBag.ImageGallery,ProductName=ViewBag.ProductName,AllowMultiple="true"})
+    @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/_AdminSummernoteRichTextEditor.cshtml",new{height=200,selector="#ProductDescription"})
+
+    @if(TempData["ErrorList"]!=null)
+    {
+        @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+    }
+    @if(TempData["ProductExisted"]!=null)
+    {
+        @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["ProductExisted"]})
+    }
+    @if (TempData["DiscountError"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["DiscountError"]})
+        @TempData.Remove("DiscountError")
+    }
+    @if(TempData["Error"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+}
+
+

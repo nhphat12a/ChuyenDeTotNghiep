@@ -1,0 +1,99 @@
+﻿@model Aristino.ViewModel.DiscountBannerVM
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ErrorList = TempData["ErrorList"];
+}
+
+<h1>Tạo Mới</h1>
+
+<h4>Banner Giảm Giá</h4>
+<hr />
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Create" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Tên Giả Giá</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="DiscountName" placeholder="Tên Giảm Giá">
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Phần Trăm Giảm Giá</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number"  class="form-control"
+                                                            asp-for="DiscountRate" placeholder="Phần Trăm Giảm Giá">
+                                                    </div> 
+                                                    <div class="col-md-4">
+                                                        <label>Danh Mục</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="CategoryId" asp-items="@ViewBag.CategoryId">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Banner</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                         <div class="card">
+                                                            <div class="card-content">
+                                                                <div class="card-body">
+                                                                    <!-- File uploader with image preview -->
+                                                                    <input type="file" class="image-preview-filepond">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Ngày Kết Thúc Sale</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">      
+                                                        <input type="date" class="form-control" asp-for="EndDate"/>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Giờ Kết Thúc Sale</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group"> 
+                                                        <input type="time" class="form-control" asp-for="EndTime" />
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Tạo</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Quay Lại</a>
+</div>
+@section Scripts{
+    @await Html.PartialAsync("~/Areas/AristinoAdmin/Views/Shared/FilePond/_UploadImage.cshtml",
+    new{InputClass=".image-preview-filepond",FormId="#formupload",ActionName="Create",ControllerName="AdminDiscountBanners",ImageGallery="",ProductName="",AllowMultiple="false"})
+
+    @if(TempData["ErrorList"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList});
+        @TempData.Remove("ErrorList")
+    }
+    @if (TempData["Error"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminErrorSweetAlert.cshtml",new{Error=TempData["Error"]})
+        @TempData.Remove("Error")
+    }
+}

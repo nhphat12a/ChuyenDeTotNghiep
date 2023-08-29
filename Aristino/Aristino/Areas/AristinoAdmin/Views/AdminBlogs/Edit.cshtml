@@ -1,0 +1,88 @@
+﻿@model Aristino.ViewModel.BlogVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Edit" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <input type="hidden" asp-for="BlogId" />
+                                                    <input type="hidden" asp-for="CustomerId"/>
+                                                    <input type="hidden" asp-for="BlogLike"/>
+                                                    <input type="hidden" asp-for="BlogViews"/>
+                                                    <div class="col-md-4">
+                                                        <labe>Tiêu Đề</labe>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="BlogTitle" placeholder="Title">
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Hình Đại Diện</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <div class="card">
+                                                            <div class="card-content">
+                                                                <div class="card-body">
+                                                                    <!-- File uploader with image preview -->
+                                                                    <input type="file" class="image-preview-filepond">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Nội Dung</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <textarea class="form-control" asp-for="BlogContent"></textarea>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Tên Nguồn Tham Khảo</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control" placeholder="Source Name" asp-for="SourceName" />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Liên Kết Nguồn Tham Khảo</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                        <input type="text" class="form-control" placeholder="Source Link" asp-for="SourceLink"/>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Đăng</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts{
+    
+    @await Html.PartialAsync("FilePond/_UploadImage",new{InputClass=".image-preview-filepond",FormId="#formupload",ActionName="Edit",ControllerName="AdminBlogs",ImageGallery=ViewBag.Image,ProductName=ViewBag.Name,AllowMultiple="false"})
+    @await Html.PartialAsync("_AdminSummernoteRichTextEditor.cshtml",new{height=200,selector="#BlogContent"})
+    @if (TempData["Error"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+        @TempData.Remove("Error")
+        ;
+    }
+
+}
+

@@ -1,0 +1,214 @@
+﻿@model IEnumerable<Aristino.ViewModel.OrderVM>
+
+@{
+    ViewData["Title"] = "AllOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var SumPrice = 0;
+}
+            <!-- HEADING-BANNER START -->
+            <div class="heading-banner-area overlay-bg" style="background:url('@Url.Content("~/img/cart/shipping-info.png")')">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="heading-banner">
+                                <div class="heading-banner-title">
+                                    <h2>Hóa Đơn Của Tôi</h2>
+                                </div>
+                                <div class="breadcumbs pb-15">
+                                    <ul>
+                                        <li><a asp-controller="Home" asp-action="Index">Trang Chủ</a></li>
+                                        <li>Hóa Đơn Của Tôi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- HEADING-BANNER END -->
+            <!-- ORDER-AREA START -->
+            <div class="shopping-cart-area  pt-80 pb-80">
+                <div class="container">	
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="shopping-cart">
+                                <!-- Nav tabs -->
+                                <ul class="cart-page-menu row clearfix mb-30">
+                                    <li><a asp-controller="UserCartArea" asp-action="Cart">Giỏ Hàng</a></li>
+                                    <li><a asp-controller="UserCartArea" asp-action="WishLists">Danh Sách Yêu Thích</a></li>
+                                    <li class="active"><a href="#order-complete" data-toggle="tab">Đơn Hàng Của Tôi</a></li>
+                                    <!-- Filter start -->
+                                </ul>
+                                    <!-- Filter end -->
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <!-- order-complete start -->
+                                    <div class="tab-pane active" id="order-complete">
+                                        <div class="shop-cart-table" style="padding-top:10px !important; padding-bottom:0px">
+                                             <div class="dropdown floatleft" style="margin-left:30px">
+                                                <button class="option-btn" style="font-size:16px">
+                                                Lọc Theo Trạng Thái: <b style="color:red">Tất Cả Trạng Thái</b>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-width" >
+                                                    <!-- Widget-Filter start -->
+                                                    <aside class="widget widget-size">
+                                                        <div class="widget-title">
+                                                            <h4>Trạng Thái</h4>
+                                                        </div>
+                                                        <div id="cat-treeview" class="widget-info product-cat boxscrol2" tabindex="1" style="overflow: hidden; outline: none;height:fit-content!important">
+                                                            <ul>
+                                                                <li><a asp-controller="CustomerOrders" asp-action="AllOrder">Tất Cả Trạng Thái</a></li>
+                                                            @foreach (TransactionStatus transac in ViewBag.AllOrderStatus)
+                                                            {
+                                                                      <li><a asp-controller="CustomerOrders" asp-action="FindOrderBaseOnStatus" asp-route-id="@transac.TransacId">@transac.TransacName</a></li>
+                                                            }
+                                                            </ul>
+                                                        </div>
+                                                    </aside>
+                                                    <!-- Widget-Filter end -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                            <div class="shop-cart-table">   
+                                                <div class="table-content table-responsive">
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="product-thumbnail">Mã Hóa Đơn</th>
+                                                                <th class="product-price">Ngày Đặt Hàng</th>
+                                                                <th class="product-quantity">Trạng Thái</th>
+                                                                <th class="product-subtotal">Phương Thức Thanh Toán</th>
+                                                                <th class="product-remove">Hủy Đơn Hàng</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                                <tr class="ParentWrap">
+                                                                    <td>
+                                                        @item.OrderNumber
+                                                                    </td>
+                                                                    <td>@item.OrderDate</td>
+                                                                    <td>@item.Transac.TransacName</td>
+                                                                    <td>@item.Payment.PaymentName</td>
+                                                                    <td class="product-remove">
+                                                        @if (item.TransacId <= 2)
+                                                        {
+                                                                                <a class="cartDelete" ><i class="zmdi zmdi-close"></i></a>
+                                                                                <input type="hidden" value="@item.OrderId" class="OrderId" />
+                                                        }
+                                                                    </td>
+                                                                </tr>
+                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="shop-cart-table check-out-wrap">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-sm-12">
+                                                        <div class="our-order payment-details pr-20">
+                                                            <h4 class="title-1 title-border text-uppercase mb-30">Đơn Hàng</h4>
+                                                            <div class="payment-method  pl-20">
+                                                @foreach (var item in Model)
+                                                {
+                                                                <div class="payment-accordion">
+                                                                    <!-- Accordion start  -->
+                                                                    <h3 class="payment-accordion-toggle">Mã Hóa Đơn @item.OrderNumber</h3>
+                                                                    <div class="payment-content">
+                                                                    <div class="our-order payment-details pr-20">
+                                                                <table>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th><strong>Tên Sản Phẩm</strong></th>
+                                                                            <th class="text-right"><strong>Tổng (VNĐ)</strong></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach (var orderdetail in item.OrdersDetails)
+                                                                        {
+                                                                            SumPrice = SumPrice + orderdetail.Price;
+                                                                                    <tr>
+                                                                                <td>@orderdetail.Product.ProductName x @orderdetail.Quantity</td>
+                                                                                <td class="text-right">@orderdetail.Price</td>
+                                                                            </tr>
+                                                                        }
+                                                                        <tr>
+                                                                            <td>Shipping and Handing</td>
+                                                                            <td class="text-right">0</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Vat</td>
+                                                                            <td class="text-right">0</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Tổng Tiền</td>
+                                                                            <td class="text-right">@SumPrice VNĐ</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                                    <!-- Accordion end -->			
+                                                        </div>
+                                                    SumPrice = 0;
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                                    <!-- payment-method -->
+                                                    <div class="col-md-6 col-sm-6 col-sm-12 mt-xs-30">
+                                                        <div class="payment-method  pl-20">
+                                                            <h4 class="title-1 title-border text-uppercase mb-30">Thông Tin Của Tôi</h4>
+                                            @foreach (Customer customer in ViewBag.CustomerDetail)
+                                            {
+                                                                <div class="payment-accordion">
+                                                                    <!-- Accordion start  -->
+                                                                    <h3 class="payment-accordion-toggle">Chỉ Tiết</h3>
+                                                                    <div class="payment-content">
+                                                                    <div class="our-order payment-details pr-20">
+                                                                <table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Tên Khách Hàng</td>
+                                                                            <td class="text-right">@customer.FirstName @customer.LastName</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Email </td>
+                                                                            <td class="text-right">@customer.Email</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Địa Chỉ</td>
+                                                                            <td class="text-right">@customer.CustomerAddress</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Số Điện Thoại</td>
+                                                                            <td class="text-right">@customer.PhoneNumber</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                            </div>
+                                                                    <!-- Accordion end -->			
+                                                                </div>	
+                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>									
+                                    </div>
+                                    <!-- order-complete end -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ORDER-AREA END -->
+@section Scripts{
+    @await Html.PartialAsync("~/AJAX/DeleteButton.cshtml",
+	new{ItemId=".OrderId",DeleteButton=".cartDelete",ActionName="CancelOrder",ControllerName="AdminOrders",WarningMessage="You Want Cancel This Order ?",
+	ParentDiv=".ParentWrap",FormDataAppend="id"})
+}

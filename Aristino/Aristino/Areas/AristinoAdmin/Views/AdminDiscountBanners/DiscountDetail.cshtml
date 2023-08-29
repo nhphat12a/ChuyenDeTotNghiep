@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Aristino.ViewModel.ProductVM>
+
+@{
+    ViewData["Title"] = "DiscountDetail";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Chi Tiết Banner Giảm Giá "@ViewBag.DiscountName"</h1>
+            <div class="page-heading">
+                <section class="section">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="ButtonArea" style="display:flex;justify-content:space-between">
+                                <a class="badge bg-success" asp-action="AddProductToBanner" asp-route-CategoryId="@ViewBag.CategoryId" asp-route-DiscountId="@ViewBag.DiscountId">Thêm Sản Phẩm</a>
+                                <button class="badge bg-danger" id="DeleteAll" disabled>Xóa Mục Đã Chọn Khỏi Banner</button>
+                                <input type="hidden" value="@ViewBag.DiscountId" id="DiscountId" />
+                            </div>
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Chọn Tất Cả <input type="checkbox" id="CheckAll" /></th>
+                                        <th>Tên Sản Phẩm</th>
+                                        <th>Giá</th>
+                                        <th>Hình Sản Phẩm</th>
+                                        <th>Số Lượng</th>
+                                        <th>Giảm Giá</th>
+                                        <th>Danh Mục</th>
+                                        <th>Màu Sắc</th>
+                                        <th>Kích Cỡ</th>
+                                        <th>Trạng Thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach(var item in Model)
+                                        {
+                                    <tr>
+                                                <td><input type="checkbox" value="@item.ProductId" class="cb"/></td>
+                                                <td>@Html.DisplayFor(modelitem=>item.ProductName)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Price)</td>
+                                                <td><img src="@Url.Content("~/uploads/AdminProducts/"+item.ProductName+"/"+item.ProductImage)" style="width:75px;height:75px"/></td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Quantity)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Discount)%</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Category.CategoryName)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Color)</td>
+                                                <td>@Html.DisplayFor(modelitem=>item.Size)</td>
+                                            <td>
+                                                @if(item.Active==false)
+                                                {
+                                                    <span class="badge bg-danger">About to Sale</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">On Sale</span>
+                                                }
+                                            </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                </div>
+<script src="~/assets/vendors/simple-datatables/simple-datatables.js"></script>
+<script>
+        // Simple Datatable
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@section Scripts{
+    @if (TempData["Success"] != null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSuccessSweetAlert.cshtml",new{Success=TempData["Success"]})
+        @TempData.Remove("Success")
+    }
+    @await Html.PartialAsync("~/JavascriptPartialView/DisableEnableButton.cshtml",new{DeleteAllButton="DeleteAll",CheckBoxClassName="cb"})
+    @await Html.PartialAsync("~/JavascriptPartialView/CheckAllCheckBox.cshtml",new{CheckAllButton="CheckAll",GetAllCheckBox="cb",DeleteButton="DeleteAll"})
+    @await Html.PartialAsync("~/AJAX/DeleteMultipleAJAX.cshtml",new
+    {CheckBoxClassName=".cb",DeleteButton="#DeleteAll",ControllerName="AdminDiscountBanners",ActionName="RemoveProductFromBanner",
+    getID="#DiscountId",VariableName="DiscountId"})
+}

@@ -1,0 +1,116 @@
+﻿@model Aristino.ViewModel.CustomerVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/AristinoAdmin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ErrorList = TempData["ErrorList"];
+}
+<h4>Cập Nhật Thông Tin Khách Hàng</h4>
+<hr />
+<div class="col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal" id="formupload" asp-action="Edit" enctype="multipart/form-data" method="post">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <input type="hidden" asp-for="CustomersId"/>
+                                                    <div class="col-md-4">
+                                                        <label>Họ</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="FirstName" placeholder="Họ" readonly>
+                                                    </div>   
+                                                    <div class="col-md-4">
+                                                        <label>Tên Khách Hàng</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text"  class="form-control"
+                                                            asp-for="LastName" placeholder="LastName" readonly>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Ngày Sinh</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                       <input type="text" class="form-control" asp-for="Dob" readonly/>
+                                                    </div>
+                                                     <div class="col-md-4">
+                                                        <label>Giới Tính</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="GenderId" asp-items="ViewBag.Gender" disabled>
+                                                            <option ></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Địa Chỉ</label>
+                                                    </div>
+
+                                                    <div class="col-md-8 form-group">      
+                                                         <input type="text" class="form-control" asp-for="CustomerAddress" readonly/>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Số Điện Thoại</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number" asp-for="PhoneNumber" class="form-control" readonly />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Email</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="email" class="form-control" asp-for="Email" readonly />
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Trạng Thái</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <select class="form-control" asp-for="StatusId" asp-items="@ViewBag.Status">
+                                                            <option value="" disabled selected></option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Ngày Tạo</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number" class="form-control"
+                                                            asp-for="CreatedDate" placeholder="Ngày Tạo" readonly>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Mã Bưu Điện</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" class="form-control"
+                                                            asp-for="PostalCode" placeholder="PostalCode" readonly>
+                                                    </div>
+                                                      <div class="col-md-4">
+                                                        <label>Quốc Gía</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="text" asp-for="Country" class="form-control" readonly/>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Lưu</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts{
+    @if(TempData["ErrorList"]!=null)
+    {
+        @await Html.PartialAsync("SweetAlertPartialView/_AdminSweetAlert.cshtml",new{getErrorList=ViewBag.ErrorList})
+        @TempData.Remove("ErrorList")
+    }
+}
